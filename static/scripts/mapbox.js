@@ -1,36 +1,64 @@
 mapboxgl.accessToken = 'pk.eyJ1Ijoib2xlemgiLCJhIjoiY2swZ3oxb2E3MDAzODNkdXY5NHN6NHl2biJ9.S64PvKhaqrlVk_7jVAOmdw';
 
 var map = new mapboxgl.Map({
-	container: 'map', // container id
-	style: 'mapbox://styles/mapbox/satellite-v9', //hosted style id
-	center: [-91.874, 42.760], // starting position
+container: 'map', // container id
+style: 'mapbox://styles/mapbox/satellite-v9', //hosted style id
+center: [-91.874, 42.760], // starting position
 zoom: 12 // starting zoom
 });
- 
+
 var draw = new MapboxDraw({
-	displayControlsDefault: false,
-	controls: {
-		polygon: true,
-		trash: true
-	}
-});
-map.addControl(draw);
-map.addControl(new mapboxgl.NavigationControl());
- 
-map.on('draw.create', updateArea);
-map.on('draw.delete', updateArea);
-map.on('draw.update', updateArea);
- 
-function updateArea(e) {
-	var data = draw.getAll();
-	var answer = document.getElementById('calculated-area');
-	if (data.features.length > 0) {
-		var area = turf.area(data);
-		// restrict to area to 2 decimal points
-		var rounded_area = Math.round(area*100)/100;
-		answer.innerHTML = '<p><strong>' + rounded_area + '</strong></p><p>square meters</p>';
-	} else {
-		answer.innerHTML = '';
-		if (e.type !== 'draw.delete') alert("Use the draw tools to draw a polygon!");
-	}
+displayControlsDefault: false,
+controls: {
+    polygon: true,
+    trash: true
 }
+});
+
+var customData = {
+"features": [
+{
+    "type": "Feature",
+    "properties": {
+        "title": "Lincoln Park",
+        "description": "A northside park that is home to the Lincoln Park Zoo"
+    },
+    "geometry": {
+        "coordinates": [
+            -87.637596,
+            41.940403
+        ],
+        "type": "Point"
+    }
+}
+],
+"type": "FeatureCollection"
+};
+
+function forwardGeocoder(query) {
+var matchingFeatures = [];
+for (var i = 0; i < customData.features.length; i++) {
+    var feature = customData.features[i];
+    // handle queries with different capitalization than the source data by calling toLowerCase()
+    if (feature.properties.title.toLowerCase().search(query.toLowerCase()) !== -1) {
+        // add a tree emoji as a prefix for custom data results
+        // using carmen geojson format: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
+        feature['place_name'] = '🌲 ' + feature.properties.title;
+        feature['center'] = feature.geometry.coordinates;
+        feature['place_type'] = ['park'];
+        matchingFeatures.push(feature);
+    }
+}
+return matchingFeatures;
+}
+
+map.addControl(new MapboxGeocoder({
+accessToken: mapboxgl.accessToken,
+localGeocoder: forwardGeocoder,
+zoom: 14,
+placeholder: "Enter search e.g. Lincoln Park",
+mapboxgl: mapboxgl
+}));
+
+map.addControl(new mapboxgl.NavigationControl());
+map.addControl(draw);

@@ -6,35 +6,9 @@
 		<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
 		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
-		<!-- <link href='../static/css/add-task.css' rel='stylesheet'> -->
+		<link href='../static/css/add-task.css' rel='stylesheet'>
 		<style>
-			body { 
-				margin: 0;
-				padding: 0;
-			}
 
-			#map {
-				position:relative;
-				top:20px; 
-				bottom:0; 
-				left: 10%;
-				width: 80%; 
-				height: 450px;
-			}
-
-			.calculation-box {
-				position: relative;
-				height: 100px;
-				width: 80%;
-				top: 30px;
-				left: 10%;
-			}
-			 
-			p {
-				font-family: 'Open Sans';
-				margin: 0;
-				font-size: 25px;
-			}
 		</style>
 	</head>
 	<body>
@@ -45,78 +19,78 @@
 		<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.min.js'></script>
 		<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.css' type='text/css' />
 		<!--map-->
-
-		<div id='map'></div>
-		<div class='calculation-box'>
-			<p id='calculated-area'>Draw a polygon using the draw tools. </p>
-		</div>
-		
+        <div class = "main-functional">
+            <div id='map'></div>
+            <div class='calculation-box'>
+                <p>Draw a polygon using the draw tools.</p>
+                <div id='calculated-area'></div>
+            </div>
+            <div class="input-box">
+                <form>
+                <div>
+                    <label>Фокусное расстояние (м)</label>
+                    <input type="text" placeholder="Например, 0.01">
+                </div>
+                <div>
+                    <label>Допустимая высота полета (м)</label>
+                    <input type="text" placeholder="Например, 1000">
+                    </div>
+                <div>
+                    <label>Опция полета</label>
+                    <select>
+                        <option>Фото</option>
+                        <option>Построение карты</option>
+                        <option>Поиск двигающихся объектов</option>
+                    </select>
+                </div>
+                <!--<div>
+                    <label>Флажки</label>
+                    <ul>
+                        <li>
+                            <label><input type="checkbox">Lorem ipsum dolor sit amet</label>
+                        </li>
+                        <li>
+                            <label><input type="checkbox">Consectetur adipisicing elit</label>
+                        </li>
+                        <li>
+                            <label><input type="checkbox" disabled="disabled">Disabled checkbox</label>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <label>Переключатели</label>
+                    <ul>
+                        <li>
+                            <label><input type="radio">Lorem ipsum dolor sit amet</label>
+                        </li>
+                        <li>
+                            <label><input type="radio">Consectetur adipisicing elit</label>
+                        </li>
+                        <li>
+                            <label><input type="radio" disabled="disabled">Disabled radio</label>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    <label>Выберите файл</label>
+                    <input type="file">
+                </div>
+                <div>
+                    <label>Textarea</label>
+                    <textarea></textarea>
+                </div>
+                -->
+                <div>
+                    <label>Кнопка</label>
+                    <button type="submit">Отправить</button>
+                    <button type="reset">Сбросить</button>
+                </div>
+            </form>
+            </div>
+        </div>
 		<!-- <script type="text/javascript" src='../static/scripts/mapbox.js'></script> -->
-		<script>
-			mapboxgl.accessToken = 'pk.eyJ1Ijoib2xlemgiLCJhIjoiY2swZ3oxb2E3MDAzODNkdXY5NHN6NHl2biJ9.S64PvKhaqrlVk_7jVAOmdw';
+		<script src="../static/scripts/mapbox.js">
 
-			var map = new mapboxgl.Map({
-				container: 'map', // container id
-				style: 'mapbox://styles/mapbox/satellite-v9', //hosted style id
-				center: [-91.874, 42.760], // starting position
-			zoom: 12 // starting zoom
-			});
-			 
-			var draw = new MapboxDraw({
-				displayControlsDefault: false,
-				controls: {
-					polygon: true,
-					trash: true
-				}
-			});
-
-			var customData = {
-			"features": [
-				{
-					"type": "Feature",
-					"properties": {
-						"title": "Lincoln Park",
-						"description": "A northside park that is home to the Lincoln Park Zoo"
-					},
-					"geometry": {
-						"coordinates": [
-							-87.637596,
-							41.940403
-						],
-						"type": "Point"
-					}
-				}
-				],
-				"type": "FeatureCollection"
-			};
-
-			function forwardGeocoder(query) {
-				var matchingFeatures = [];
-				for (var i = 0; i < customData.features.length; i++) {
-					var feature = customData.features[i];
-					// handle queries with different capitalization than the source data by calling toLowerCase()
-					if (feature.properties.title.toLowerCase().search(query.toLowerCase()) !== -1) {
-						// add a tree emoji as a prefix for custom data results
-						// using carmen geojson format: https://github.com/mapbox/carmen/blob/master/carmen-geojson.md
-						feature['place_name'] = '🌲 ' + feature.properties.title;
-						feature['center'] = feature.geometry.coordinates;
-						feature['place_type'] = ['park'];
-						matchingFeatures.push(feature);
-					}
-				}
-				return matchingFeatures;
-			}
-			 
-			map.addControl(new MapboxGeocoder({
-				accessToken: mapboxgl.accessToken,
-				localGeocoder: forwardGeocoder,
-				zoom: 14,
-				placeholder: "Enter search e.g. Lincoln Park",
-				mapboxgl: mapboxgl
-			}));
-
-			map.addControl(new mapboxgl.NavigationControl());
-			map.addControl(draw);
 		</script>
 	</body>
 </html>
