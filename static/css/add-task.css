@@ -6,10 +6,21 @@ body {
 
 .main-functional{
     display: grid;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 1fr;
     grid-template-rows: 55vh 40vh ;
 }
 
+.map{
+    margin-left: 5vw;
+    width: 90vw;
+    margin-top: 1.5vh;
+}
+
+.form{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
 /**************************************************  MAP  **************************/
 
 #map {
@@ -48,22 +59,21 @@ p {
     color: #7e7e7e;
 }
 
-div {
+.div {
     clear: both;
     padding: 8px 0;
     overflow: hidden;
 }
 
-form {
+.form {
     padding: 20px;
     font-family: Arial;
     font-size: 13px;
-    display: inline-block;
     background-color: #37393c;
     color: white;
 }
 
-label {
+.label {
     padding-top: 6px;
     line-height: 18px;
     float: left;
@@ -72,7 +82,7 @@ label {
     width: 120px;
 }
 
-input,select,textarea {
+.input,.select,.textarea {
     display: inline-block;
     width: 250px;
     height: 18px;
@@ -91,7 +101,7 @@ input,select,textarea {
     border-radius: 4px;
 }
 
-input:focus,select:focus,textarea:focus {
+.input:focus,.select:focus,.textarea:focus {
     border: 1px solid #97b7d9;
     outline: none;
     -webkit-box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 8px rgba(151, 183, 217, 0.6);
@@ -99,16 +109,16 @@ input:focus,select:focus,textarea:focus {
     box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.5), 0 0 8px rgba(151, 183, 217, 0.6);
 }
 
-select {
+.select {
     width: 200px;
     height: auto;
 }
 
-textarea {
+.textarea {
     height: auto;
 }
 
-button {
+.button {
     display: inline-block;
     width: auto;
     height: auto;
@@ -140,7 +150,7 @@ button {
     transition: 0.1s linear all;
 }
 
-button[type=reset] {
+.button[type=reset] {
     background-color: #292929;
     background-repeat: repeat-x;
     background-image: -khtml-gradient(linear, left top, left bottom, from(#646464), to(#292929));
@@ -154,11 +164,11 @@ button[type=reset] {
     border: 1px solid #161616;
 }
 
-button:hover,button[type=reset]:hover {
+.button:hover,.button[type=reset]:hover {
     background-position: 0 -15px;
 }
 
-input[type=checkbox],input[type=radio] {
+.input[type=checkbox],.input[type=radio] {
     width: auto;
     height: auto;
     margin-left: 0;
@@ -168,28 +178,28 @@ input[type=checkbox],input[type=radio] {
     border: none;
 }
 
-input[type=file] {
+.input[type=file] {
     background-color: #37393c;
     height: 27px;
     border: none;
 }
 
-input[type=file]:focus, input[type=checkbox]:focus, select:focus {
+.input[type=file]:focus, .input[type=checkbox]:focus, .select:focus {
     outline: 1px dotted #666;
 }
 
-input[disabled] {
+.input[disabled] {
     background-color: #343536;
     border-color: #585858;
     cursor: not-allowed;
 }
 
-button::-moz-focus-inner, input::-moz-focus-inner {
+.button::-moz-focus-inner, .input::-moz-focus-inner {
     border: 0;
     padding: 0;
 }
 
-ul {
+.ul {
     list-style: none;
     margin: 0;
     padding: 0;
@@ -197,14 +207,14 @@ ul {
     float: left;
 }
 
-ul li {
+.ul, .li {
     display: block;
     width: 100%;
     clear: both;
     margin: 0;
 }
 
-ul li label {
+.ul, .li, .label {
     float: none;
     padding: 0;
     width: auto;
