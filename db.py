@@ -2,7 +2,7 @@ from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
 from sqlalchemy import Text, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import mapper, sessionmaker
 
-engine = create_engine("mysql+mysqlconnector://user: <your password> @localhost/<your database>")
+engine = create_engine("mysql+mysqlconnector://user:Dgk.cf[ytn,eleotuj@localhost/JIT", echo=True)
 metadata = MetaData()
 Session = sessionmaker(bind=engine)
 
