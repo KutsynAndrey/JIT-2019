@@ -3,6 +3,7 @@
 	<head>
 		<meta charset='utf-8' />
 		<title>Додати завдання</title>
+        {% include 'header.html' %}
 		<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
@@ -10,6 +11,7 @@
 		<link href='../static/css/add-task.css' rel='stylesheet'>
 	</head>
 	<body>
+        {% include 'nav.html' %}
 		<!--map-->
 		<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
 		<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
@@ -21,58 +23,50 @@
         <div class = "main-functional">
             <div class="map" id='map'></div>
             <div class="input-box">
-                <form class="form">
+                <form class="form" method="post">
                     <div class='div'>
-                        <label class="label">Фокусна відстань (м)</label>
-                        <input class="input" type="text" placeholder="Наприклад, 0.01">
+                        <label class="label">Фокусна відстань (м)</label><br>
+                        <input class="input" type="text" name="focal_length" placeholder="Наприклад, 0.01" required>
                     </div>
                     <div class='div'>
-                        <label class="label">Допустима висота польоту (м)</label>
-                        <input class="input" type="text" placeholder="Наприклад, 1000">
+                        <label class="label">Допустима висота польоту (м)</label><br>
+                        <input class="input" type="text" name="fly_height" placeholder="Наприклад, 1000" required>
                     </div>
                     <div class='div'>
-                        <label class="label">Висота фотосенсора (мм)</label>
-                        <input class="input" type="text" placeholder="Наприклад, 100">
+                        <label class="label">Висота фотосенсора (мм)</label><br>
+                        <input class="input" type="text" name="ps_height" placeholder="Наприклад, 100" required>
                     </div>
                     <div class='div'>
-                        <label class="label">Ширина фотосенсора (мм)</label>
-                        <input class="input" type="text" placeholder="Наприклад, 100">
+                        <label class="label">Ширина фотосенсора (мм)</label><br>
+                        <input class="input" type="text" name="ps_width" placeholder="Наприклад, 100" required>
                     </div>
                     <div class='div'>
-                        <label class="label">Об'єм батареї дрона (mAh)</label>
-                        <input class="input" type="text" placeholder="Наприклад, 1000">
+                        <label class="label">Об'єм батареї дрона (mAh)</label><br>
+                        <input class="input" type="text" name="battery_capacity" placeholder="Наприклад, 1000" required>
                     </div>
                     <div class='div'>
-                        <label class="label">Витрати заряду на фото (mAh)</label>
-                        <input class="input" type="text" placeholder="Наприклад, 10">
+                        <label class="label">Витрати заряду на фото (mAh)</label><br>
+                        <input class="input" type="text" name="photo_loss" placeholder="Наприклад, 10" required>
                     </div>
                     <div class='div'>
-                        <label class="label">Витрати заряду на політ (mAh)</label>
-                        <input class="input" type="text" placeholder="Наприклад, 1000">
+                        <label class="label">Витрати заряду на політ (mAh)</label><br>
+                        <input class="input" type="text" name="fly_loss" placeholder="Наприклад, 1000" required>
                     </div>
-                    <!-- <div class='div'>
-                        <label class="label">Опция полета</label>
-                        <select class="kost" class="select">
-                            <option>Фото</option>
-                            <option>Построение карты</option>
-                            <option>Поиск двигающихся объектов</option>
-                        </select>
-                    </div> -->
                     <br>
-                    <div style='font-size: 15px;'>Координати полігону(довгота та широта)</div>
-                    <div></div>
-                    <div></div>
-                    <div></div>
-                    <div class='div'>
-                        <label class="label">Довгота</label>
-                        <input class="input latitude" type="number" placeholder="Наприклад, -43.32">
-                    </div>
-                    <div class='div'>
-                        <label class="label">Широта</label>
-                        <input class="input longitude" type="number" placeholder="Наприклад, -43.32">
-                    </div>
-                    <button id = 'new-inputs' class='button' type="button">Додати точку</button>
-                    <button id = 'show-polygon' class='button' type="button">Побудувати полігон</button>
+                        <div>Координати полігону(довгота та широта)</div>
+                        <div></div>
+                        <div></div>
+                        <div></div>
+                        <div class='div'>
+                            <label class="label">Довгота</label>
+                            <input class="input latitude" type="number" placeholder="Наприклад, -43.32">
+                        </div>
+                        <div class='div'>
+                            <label class="label">Широта</label>
+                            <input class="input longitude" type="number" placeholder="Наприклад, -43.32">
+                        </div>
+                        <button id = 'new-inputs' class='button' type="button">Додати точку</button>
+                        <button id = 'show-polygon' class='button' type="button">Побудувати полігон</button>
                     <div class='div'>
                         <button class="button" type="submit">Відправити</button>
                         <button class="button" type="reset">Скинути</button>

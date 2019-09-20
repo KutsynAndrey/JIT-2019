@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    {% include 'header.html' %}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/sign-up-page.css') }}" />
+  </head>
+  <body>
+   {% include 'nav.html' %}
+    <div class = "sign-up-page-block">
+    <form method="post" action="/sign-up-page">
+      <h1 class="main-text">Регистрация</h1>
+      <br>
+      <label><big class="main-text">Никнейм</big></label>
+      <input type="text" class="sign-up-page-info input" name="nick" placeholder="Введите ник" required>
+      <br><br>
+      <label><big class="main-text">Почта</big></label>
+      <input type="text" class="sign-up-page-info input" name="email" placeholder="Адрес электронной почты" required>
+      <br><br>
+      <label><big class="main-text">Пароль</big></label>
+      <input type="password" class="sign-up-page-info input" name="pass" placeholder="Пароль" required>
+      <br><br>
+      <label><big class="main-text">Еще раз пароль</big></label>
+      <input type="password" class="sign-up-page-info input" name="checkpass" placeholder="Для убедительности" required>
+      <br><br>
+      <button class="button" type="submit">Відправити</button>
+    </form>
+    </div>
+   {% if session['password_match_error'] %}
+    <script>
+            alert("Пароли не совпадают")
+    </script>
+   {% elif session['identiсal_nick_error'] %}
+   <script>
+            alert("Данный никнейм занят")
+   </script>
+   {% endif %}
+  </body>
+</html>
