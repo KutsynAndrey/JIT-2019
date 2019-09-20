@@ -25,43 +25,43 @@
         <div class = "main-functional">
             <div class="map" id='map'></div>
             <div class="input-box">
-                <form class="form">
+                <form class="form" method="post">
                 <div class='div'>
                     <label class="label">Фокусна відстань (м)</label><br>
-                    <input class="input" type="text" placeholder="Наприклад, 0.01">
+                    <input class="input" type="text" name="focal_length" placeholder="Наприклад, 0.01" required>
                 </div>
                 <div class='div'>
                     <label class="label">Допустима висота польоту (м)</label><br>
-                    <input class="input" type="text" placeholder="Наприклад, 1000">
+                    <input class="input" type="text" name="fly_height" placeholder="Наприклад, 1000" required>
                 </div>
                 <div class='div'>
                     <label class="label">Висота фотосенсора (мм)</label><br>
-                    <input class="input" type="text" placeholder="Наприклад, 100">
+                    <input class="input" type="text" name="ps_height" placeholder="Наприклад, 100" required>
                 </div>
                 <div class='div'>
                     <label class="label">Ширина фотосенсора (мм)</label><br>
-                    <input class="input" type="text" placeholder="Наприклад, 100">
+                    <input class="input" type="text" name="ps_width" placeholder="Наприклад, 100" required>
                 </div>
                 <div class='div'>
                     <label class="label">Об'єм батареї дрона (mAh)</label><br>
-                    <input class="input" type="text" placeholder="Наприклад, 1000">
+                    <input class="input" type="text" name="battery_capacity" placeholder="Наприклад, 1000" required>
                 </div>
                 <div class='div'>
                     <label class="label">Витрати заряду на фото (mAh)</label><br>
-                    <input class="input" type="text" placeholder="Наприклад, 10">
+                    <input class="input" type="text" name="photo_loss" placeholder="Наприклад, 10" required>
                 </div>
                 <div class='div'>
                     <label class="label">Витрати заряду на політ (mAh)</label><br>
-                    <input class="input" type="text" placeholder="Наприклад, 1000">
+                    <input class="input" type="text" name="fly_loss" placeholder="Наприклад, 1000" required>
                 </div>
-                <div class='div'>
-                    <!-- <label class="label">Опция полета</label>
+                <!-- <div class='div'>
+                    <label class="label">Опция полета</label>
                     <select class="kost" class="select">
                         <option>Фото</option>
                         <option>Построение карты</option>
                         <option>Поиск двигающихся объектов</option>
-                    </select> -->
-                </div>
+                    </select>
+                </div> -->
                 <!--<div>
                     <label>Флажки</label>
                     <ul>

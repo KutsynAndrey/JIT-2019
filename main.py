@@ -2,20 +2,26 @@ from flask import Flask
 from flask import render_template, session, request, redirect
 from db import Session
 from db import User, Query, Coord
-from datetime import datetime
+from db import set_coord, set_query, set_user
+
 
 db_session = Session()
 app = Flask(__name__)
 app.secret_key = '1234567'
 
 
-@app.route('/')
+@app.route('/', methods=['POST', 'GET'])
 @app.route('/new-polygon', methods=['POST', 'GET'])
 def add_task():
 	if 'is_logged' in session:
 		pass
 	else:
 		session['is_logged'] = False
+
+	if request.method == 'POST':
+		print("POST yeah")
+		print(request.form)
+		set_query(session['user_id'], request.form, db_session)
 	return render_template('add-task.html', session=session)
 
 
@@ -29,7 +35,7 @@ def registration():
 			session['identiсal_nick_error'] = True
 			session['password_match_error'] = False
 		else:
-			registration()
+			set_user(request.form, db_session)
 			session['identiсal_nick_error'] = False
 			session['password_match_error'] = False
 	return render_template('sign-up-page.html', session=session)
@@ -49,6 +55,17 @@ def sign_in():
 		if session['is_logged']:
 			return redirect('/')
 	return render_template('sign-in-page.html', session=session)
+
+
+@app.route('/logout')
+def logout():
+	session.clear()
+	return redirect('/')
+
+
+@app.route('/tasks')
+def tasks():
+	return render_template('tasks.html', session=session)
 
 
 def same_nickname():
@@ -72,27 +89,6 @@ def login(nickname, password):
 		session['nickname'] = obj.nickname
 		session['email'] = obj.email
 		session['user_id'] = obj.id
-
-
-def registration():
-	user = User(request.form['nick'],
-				request.form['pass'],
-				request.form['email'],
-				time_now(str(datetime.now())))
-
-	db_session.add(user)
-	db_session.commit()
-	return
-
-
-def time_now(time):
-	t = ''
-	for i in time:
-		if i == '.':
-			break
-		t += i
-
-	return t
 
 
 if __name__ == '__main__':

@@ -42,7 +42,7 @@ body{
     line-height: 18px;
     color: #efefef;
     border: 1px solid #a4a4a4;
-    background-color: black;
+    background-color: #202223;
     -webkit-transition: border linear 0.2s, box-shadow linear 0.2s;
     -moz-transition: border linear 0.2s, box-shadow linear 0.2s;
     -ms-transition: border linear 0.2s, box-shadow linear 0.2s;
