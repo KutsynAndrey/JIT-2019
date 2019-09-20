@@ -4,15 +4,12 @@
         <li>
             <a href="/">Главная</a>
         </li>
-        <li>
-            <a href="/">chto-to</a>
-        </li>
-        <li>
-            <a href="/status">Состояние</a>
-        </li>
         {% if session['is_logged'] %}
         <li>
-            <a href="/sends">Мои таски</a>
+            <a href="/">Добавить таск</a>
+        </li>
+        <li>
+            <a href="/tasks">Мои таски</a>
         </li>
         {% endif %}
     </ul>

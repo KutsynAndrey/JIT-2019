@@ -1,0 +1,46 @@
+body{
+    background-color: #37393c;
+}
+
+.problems-table {
+    position: relative;
+
+    left: 50%;
+    margin-left: -40%;
+
+    width: 80%;
+    border: 1px solid #b6daff;
+    margin-bottom: 20px;
+}
+
+.problems-table td {
+    padding: 5px 0;
+    position: relative;
+    border: 1px solid #b6daff;
+    text-align: center;
+}
+
+.problems-main {
+    font-weight: bold;
+    color: #efefef;
+}
+
+.problems-column1 {
+    width: 10%;
+}
+
+.problems-column2 {
+    width: 30%;
+}
+
+.problems-column3 {
+    width: 30%;
+}
+
+.problems-column4 {
+    width: 20%
+}
+
+.problems-column5 {
+    width: 10%
+}
