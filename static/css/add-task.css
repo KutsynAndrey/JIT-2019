@@ -7,7 +7,7 @@ body {
 .main-functional{
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 55vh 40vh ;
+    grid-template-rows: 70vh 40vh;
 }
 
 .map{
@@ -20,12 +20,22 @@ body {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
+    margin-left: 4vw;
 }
 /**************************************************  MAP  **************************/
 
 #map {
     top:0; 
     bottom:0;
+}
+
+#new-inputs, #show-polygon {
+    margin: 0;
+    top: 0;
+    bottom: 0;
+    margin-top: 1.8vw;
+    height: 30px;
+    font-size: 13px;
 }
 
 .calculation-box {
@@ -38,7 +48,7 @@ body {
     padding: 15px;
     text-align: center;
 }
- 
+
 p {
     font-family: 'Open Sans';
     margin: 0;
@@ -48,9 +58,6 @@ p {
 
 /************************************************  FORM  ***********************************/
 
-.input-box{
-
-}
 :-moz-placeholder {
     color: #7e7e7e;
 }
@@ -80,6 +87,7 @@ p {
     color: #b6daff;
     margin-right: 7px;
     width: 120px;
+    font-size: 15px;
 }
 
 .input,.select,.textarea {

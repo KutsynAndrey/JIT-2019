@@ -5,11 +5,9 @@
 		<title>Додати завдання</title>
 		<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
+        <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
 		<link href='../static/css/add-task.css' rel='stylesheet'>
-		<style>
-
-		</style>
 	</head>
 	<body>
 		<!--map-->
@@ -24,89 +22,66 @@
             <div class="map" id='map'></div>
             <div class="input-box">
                 <form class="form">
-                <div class='div'>
-                    <label class="label">Фокусна відстань (м)</label>
-                    <input class="input" type="text" placeholder="Наприклад, 0.01">
-                </div>
-                <div class='div'>
-                    <label class="label">Допустима висота польоту (м)</label>
-                    <input class="input" type="text" placeholder="Наприклад, 1000">
-                </div>
-                <div class='div'>
-                    <label class="label">Висота фотосенсора (мм)</label>
-                    <input class="input" type="text" placeholder="Наприклад, 100">
-                </div>
-                <div class='div'>
-                    <label class="label">Ширина фотосенсора (мм)</label>
-                    <input class="input" type="text" placeholder="Наприклад, 100">
-                </div>
-                <div class='div'>
-                    <label class="label">Об'єм батареї дрона (mAh)</label>
-                    <input class="input" type="text" placeholder="Наприклад, 1000">
-                </div>
-                <div class='div'>
-                    <label class="label">Витрати заряду на фото (mAh)</label>
-                    <input class="input" type="text" placeholder="Наприклад, 10">
-                </div>
-                <div class='div'>
-                    <label class="label">Витрати заряду на політ (mAh)</label>
-                    <input class="input" type="text" placeholder="Наприклад, 1000">
-                </div>
-                <div class='div'>
-                    <!-- <label class="label">Опция полета</label>
-                    <select class="kost" class="select">
-                        <option>Фото</option>
-                        <option>Построение карты</option>
-                        <option>Поиск двигающихся объектов</option>
-                    </select> -->
-                </div>
-                <!--<div>
-                    <label>Флажки</label>
-                    <ul>
-                        <li>
-                            <label><input type="checkbox">Lorem ipsum dolor sit amet</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox">Consectetur adipisicing elit</label>
-                        </li>
-                        <li>
-                            <label><input type="checkbox" disabled="disabled">Disabled checkbox</label>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <label>Переключатели</label>
-                    <ul>
-                        <li>
-                            <label><input type="radio">Lorem ipsum dolor sit amet</label>
-                        </li>
-                        <li>
-                            <label><input type="radio">Consectetur adipisicing elit</label>
-                        </li>
-                        <li>
-                            <label><input type="radio" disabled="disabled">Disabled radio</label>
-                        </li>
-                    </ul>
-                </div>
-                <div>
-                    <label>Выберите файл</label>
-                    <input type="file">
-                </div>
-                <div>
-                    <label>Textarea</label>
-                    <textarea class="textarea"></textarea>
-                </div>
-                -->
-                <div class='div'>
-                    <button class="button" type="submit">Відправити</button>
-                    <button class="button" type="reset">Скинути</button>
-                </div>
-            </form>
+                    <div class='div'>
+                        <label class="label">Фокусна відстань (м)</label>
+                        <input class="input" type="text" placeholder="Наприклад, 0.01">
+                    </div>
+                    <div class='div'>
+                        <label class="label">Допустима висота польоту (м)</label>
+                        <input class="input" type="text" placeholder="Наприклад, 1000">
+                    </div>
+                    <div class='div'>
+                        <label class="label">Висота фотосенсора (мм)</label>
+                        <input class="input" type="text" placeholder="Наприклад, 100">
+                    </div>
+                    <div class='div'>
+                        <label class="label">Ширина фотосенсора (мм)</label>
+                        <input class="input" type="text" placeholder="Наприклад, 100">
+                    </div>
+                    <div class='div'>
+                        <label class="label">Об'єм батареї дрона (mAh)</label>
+                        <input class="input" type="text" placeholder="Наприклад, 1000">
+                    </div>
+                    <div class='div'>
+                        <label class="label">Витрати заряду на фото (mAh)</label>
+                        <input class="input" type="text" placeholder="Наприклад, 10">
+                    </div>
+                    <div class='div'>
+                        <label class="label">Витрати заряду на політ (mAh)</label>
+                        <input class="input" type="text" placeholder="Наприклад, 1000">
+                    </div>
+                    <!-- <div class='div'>
+                        <label class="label">Опция полета</label>
+                        <select class="kost" class="select">
+                            <option>Фото</option>
+                            <option>Построение карты</option>
+                            <option>Поиск двигающихся объектов</option>
+                        </select>
+                    </div> -->
+                    <br>
+                    <div style='font-size: 15px;'>Координати полігону(довгота та широта)</div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
+                    <div class='div'>
+                        <label class="label">Довгота</label>
+                        <input class="input latitude" type="number" placeholder="Наприклад, -43.32">
+                    </div>
+                    <div class='div'>
+                        <label class="label">Широта</label>
+                        <input class="input longitude" type="number" placeholder="Наприклад, -43.32">
+                    </div>
+                    <button id = 'new-inputs' class='button' type="button">Додати точку</button>
+                    <button id = 'show-polygon' class='button' type="button">Побудувати полігон</button>
+                    <div class='div'>
+                        <button class="button" type="submit">Відправити</button>
+                        <button class="button" type="reset">Скинути</button>
+                    </div>
+                </form>
             </div>
         </div>
-		<!-- <script type="text/javascript" src='../static/scripts/mapbox.js'></script> -->
-		<script src="../static/scripts/mapbox.js">
 
-		</script>
+        <!--map-->
+		<script src="../static/scripts/add-task.js"></script>
 	</body>
 </html>
