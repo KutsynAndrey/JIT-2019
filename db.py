@@ -66,7 +66,7 @@ class Query(object):
         self.photo_loss = p_loss
 
     def __repr__(self):
-        return "<Query('%s', '%s')>" % (self.user_id, self.time)
+        return "<Query('%s', '%s')>" % (self.user_id, self.query_date)
 
 
 class Coord(object):
@@ -80,18 +80,26 @@ class Coord(object):
         return "<Coord('%s', '%s')>" % (self.longitude, self.latitude)
 
 
-def set_user(params, session):
-    user = User(params['nick'],
-                params['pass'],
-                params['email'],
-                time_now(str(datetime.now())))
-    session.add(user)
-    session.commit()
+def set_user(params, db_session, session):
+    if params['pass'] != params['checkpass']:
+        session['password_match_error'] = True
+        session['identiсal_nick_error'] = False
+    elif same_nickname(db_session, params["nick"]):
+        session['identiсal_nick_error'] = True
+        session['password_match_error'] = False
+    else:
+        user = User(params['nick'],
+                    params['pass'],
+                    params['email'],
+                    time_now(str(datetime.now())))
+
+        db_session.add(user)
+        db_session.commit()
 
 
-def set_query(user_id, params, session):
+def set_query(session, params, db_session):
     print(time_now(str(datetime.now())))
-    query = Query(user_id,
+    query = Query(session['user_id'],
                   time_now(str(datetime.now())),
                   params['focal_length'],
                   params['ps_width'],
@@ -101,17 +109,45 @@ def set_query(user_id, params, session):
                   params['fly_loss'],
                   params['photo_loss']
                   )
-    session.add(query)
-    session.commit()
+    db_session.add(query)
+    db_session.commit()
 
 
-def set_coord(params, session):
+def set_coord(params, db_session):
     coord = Coord(params['latitude'],
                   params['longitude'],
                   params['query_id'])
 
-    session.add(coord)
-    session.commit()
+    db_session.add(coord)
+    db_session.commit()
+
+
+def get_user(db_session, nickname, password, session):
+    obj = db_session.query(User).filter_by(nickname=nickname).first()
+    if obj is None:
+        session['Wrong_password'] = False
+        session['Wrong_nickname'] = True
+    elif obj.password != password:
+        session['Wrong_password'] = True
+        session['Wrong_nickname'] = False
+    else:
+        session['Wrong_nickname'] = False
+        session['Wrong_password'] = False
+        session['is_logged'] = True
+        session['nickname'] = obj.nickname
+        session['email'] = obj.email
+        session['user_id'] = obj.id
+
+
+def get_query(db_session, session):
+    return db_session.query(Query).filter_by(user_id=session['user_id'])
+
+
+def get_coord(db_session, query_list):
+    coord_list = []
+    for query in query_list:
+        coord_list.append(db_session.query(Coord).filter_by(query_id=query.query_id))
+    return coord_list
 
 
 def time_now(t_now):
@@ -121,6 +157,13 @@ def time_now(t_now):
             break
         t += i
     return t
+
+
+def same_nickname(db_session, nickname):
+    for person in db_session.query(User):
+        if person.nickname == nickname:
+            return True
+    return False
 
 
 mapper(User, user_table)

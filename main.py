@@ -1,8 +1,8 @@
 from flask import Flask
 from flask import render_template, session, request, redirect
 from db import Session
-from db import User, Query, Coord
-from db import set_coord, set_query, set_user
+
+from db import set_coord, set_query, set_user, get_user, get_query, get_coord
 
 
 db_session = Session()
@@ -11,16 +11,18 @@ app.secret_key = '1234567'
 
 
 @app.route('/', methods=['POST', 'GET'])
-@app.route('/new-polygon', methods=['POST', 'GET'])
-def add_task():
+def main_page():
 	if 'is_logged' in session:
 		pass
 	else:
 		session['is_logged'] = False
+	return render_template('main.html', session=session)
+
+
+@app.route('/new-polygon', methods=['POST', 'GET'])
+def add_task():
 
 	if request.method == 'POST':
-		print("POST yeah")
-		print(request.form)
 		set_query(session['user_id'], request.form, db_session)
 	return render_template('add-task.html', session=session)
 
@@ -28,16 +30,7 @@ def add_task():
 @app.route('/sign-up-page', methods=['POST', 'GET'])
 def registration():
 	if request.method == 'POST':
-		if request.form['pass'] != request.form['checkpass']:
-			session['password_match_error'] = True
-			session['identiсal_nick_error'] = False
-		elif same_nickname():
-			session['identiсal_nick_error'] = True
-			session['password_match_error'] = False
-		else:
-			set_user(request.form, db_session)
-			session['identiсal_nick_error'] = False
-			session['password_match_error'] = False
+		set_user(request.form, db_session, session)
 	return render_template('sign-up-page.html', session=session)
 
 
@@ -45,15 +38,11 @@ def registration():
 def sign_in():
 	if request.method == 'POST':
 		if request.form['nickname']:
-			login(request.form['nickname'], request.form['password'])
-			if 'admin' not in session:
-				return redirect('/sign-in-page')
-			elif session['admin']:
-				return redirect('/admin')
-			else:
-				return redirect('/profile/' + session['nickname'])
+			get_user(db_session, request.form['nickname'], request.form['password'])
+			if session['is_logged']:
+				return redirect('/new-polygon')
 		if session['is_logged']:
-			return redirect('/')
+			return redirect('/new-polygon')
 	return render_template('sign-in-page.html', session=session)
 
 
@@ -65,30 +54,9 @@ def logout():
 
 @app.route('/tasks')
 def tasks():
-	return render_template('tasks.html', session=session)
-
-
-def same_nickname():
-	for person in db_session.query(User):
-		if person.nickname == request.form['nick']:
-			return True
-	return False
-
-
-def login(nickname, password):
-	obj = db_session.query(User).filter_by(nickname=nickname).first()
-	if obj is None:
-		session['Wrong_nickname'] = True
-	elif obj.password != password:
-		session['Wrong_password'] = True
-		session['Wrong_nickname'] = False
-	else:
-		session['Wrong_nickname'] = False
-		session['Wrong_password'] = False
-		session['is_logged'] = True
-		session['nickname'] = obj.nickname
-		session['email'] = obj.email
-		session['user_id'] = obj.id
+	tasks_list = get_query(db_session, session)
+	coord_list = get_coord(db_session, tasks_list)
+	return render_template('tasks.html', session=session, tasks_list=tasks_list, coord_list=coord_list)
 
 
 if __name__ == '__main__':
