@@ -53,28 +53,33 @@
                         <input class="input" type="text" name="fly_loss" placeholder="Наприклад, 1000" required>
                     </div>
                     <br>
-                        <div>Координати полігону(довгота та широта)</div>
-                        <div></div>
-                        <div></div>
-                        <div></div>
-                        <div class='div'>
-                            <label class="label">Довгота</label>
-                            <input class="input latitude" type="number" placeholder="Наприклад, -43.32">
-                        </div>
-                        <div class='div'>
-                            <label class="label">Широта</label>
-                            <input class="input longitude" type="number" placeholder="Наприклад, -43.32">
-                        </div>
-                        <button id = 'new-inputs' class='button' type="button">Додати точку</button>
-                        <button id = 'show-polygon' class='button' type="button">Побудувати полігон</button>
+                    <div>Координати полігону(довгота та широта)</div>
+                    <div></div>
+                    <div></div>
+                    <div></div>
                     <div class='div'>
-                        <button class="button" type="submit">Відправити</button>
+                        <label class="label">Довгота</label>
+                        <input class="input latitude" type="number" placeholder="Наприклад, -43.32">
+                    </div>
+                    <div class='div'>
+                        <label class="label">Широта</label>
+                        <input class="input longitude" type="number" placeholder="Наприклад, -43.32">
+                    </div>
+                    <button id = 'new-inputs' class='button' type="button">Додати точку</button>
+                    <button id = 'show-polygon' class='button' type="button">Побудувати полігон</button>
+                    <div class='div'>
+                        <button class="button" type="submit", id='submit'>Відправити</button>
                         <button class="button" type="reset">Скинути</button>
                     </div>
                 </form>
             </div>
         </div>
-
+        <form name='PolygonsCoords' class='coords'>
+            <input type="text" id='latitude-GC'>
+            <input type="text" id='longitude-GC'>
+            <input type="text" id='latitude-DMS'>
+            <input type="text" id='longitude-DMS'>
+        </form>
         <!--map-->
 		<script src="../static/scripts/add-task.js"></script>
 	</body>
