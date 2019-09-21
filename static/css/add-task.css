@@ -15,15 +15,17 @@ body {
     width: 92vw;
     margin-top: 1.5vh;
 }
+
 .input-box{
-    width 90vw;
+    width: 90vw;
     margin-left: 5vw;
 }
+
 .form{
     display: grid;
     grid-template-columns: 1fr 1fr 1fr 1fr;
     grid-template-rows: 1fr 1fr;
-    margin-left: 4vw;
+    /*margin-left: 2vw;*/
 }
 /**************************************************  MAP  **************************/
 
@@ -39,6 +41,10 @@ body {
     margin-top: 1.8vw;
     height: 30px;
     font-size: 13px;
+}
+
+.coords {
+    display: none;
 }
 
 .calculation-box {
@@ -76,7 +82,7 @@ p {
 }
 
 .form {
-    padding: 20px;
+    padding: 20px 0;
     font-family: Arial;
     font-size: 13px;
     background-color: #37393c;
