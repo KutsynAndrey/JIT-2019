@@ -96,6 +96,7 @@ function AddPoint() {
 }
 
 function ShowPolygon() {
+    read()
     let latitude = document.getElementsByClassName("latitude"),
         longitude = document.getElementsByClassName("longitude"),
         coords = [];
@@ -154,4 +155,15 @@ function SaveCoords() {
     console.log(LongitudeGC.value);
     console.log(LatitudeDMS.value)
     console.log(LongitudeDMS.value)
+
+
+}
+
+function read(){
+    console.log("reading.....");
+    var fileUpload=document.getElementById("csvFile").files[0];
+    var reader = new FileReader();
+    reader.readAsText(fileUpload/*, "UTF-8"*/);
+    console.log(fileUpload)
+    console.log(reader)
 }
