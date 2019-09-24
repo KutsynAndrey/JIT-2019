@@ -1,10 +1,11 @@
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, Float
 from sqlalchemy import Text, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import mapper, sessionmaker
 from datetime import datetime
+from validate_email import validate_email
 
 
-engine = create_engine("mysql+mysqlconnector://ollegg:sqlollegg@localhost/JIT", echo=True)
+engine = create_engine("mysql+mysqlconnector://user:Dgk.cf[ytn,eleotuj@localhost/JIT", echo=True)
 metadata = MetaData()
 Session = sessionmaker(bind=engine)
 
@@ -30,8 +31,10 @@ query_table = Table('queries', metadata,
 
 coordinates_table = Table('coordinates', metadata,
                           Column('id', Integer, primary_key=True),
-                          Column('latitude', Integer),
-                          Column('longitude', Integer),
+                          Column('latitude_gc', Float),
+                          Column('longitude_gc', Float),
+                          Column('latitude_dms', String(20)),
+                          Column('longitude_dms', String(20)),
                           Column('query_id', Integer, ForeignKey('queries.id'))
                           )
 
@@ -71,22 +74,27 @@ class Query(object):
 
 class Coord(object):
 
-    def __init__(self, latitude, longitude, query_id):
-        self.latitude = latitude
-        self.longitude = longitude
+    def __init__(self, latitude_gc, longitude_gc, latitude_dms, longitude_dms, query_id):
+        self.latitude_gc = latitude_gc
+        self.longitude_gc = longitude_gc
+        self.latitude_dms = latitude_dms
+        self.longitude_dms = longitude_dms
         self.query_id = query_id
 
     def __repr__(self):
-        return "<Coord('%s', '%s')>" % (self.longitude, self.latitude)
+        return "<Coord('%s', '%s')>" % (self.longitude_gc, self.latitude_gc)
 
 
 def set_user(params, db_session, session):
+    print("valid", validate_email(params['email'], check_mx=True))
     if params['pass'] != params['checkpass']:
         session['password_match_error'] = True
         session['identiсal_nick_error'] = False
     elif same_nickname(db_session, params["nick"]):
         session['identiсal_nick_error'] = True
         session['password_match_error'] = False
+    elif not validate_email(params['email'], check_mx=True):
+        session['valid_email'] = False
     else:
         user = User(params['nick'],
                     params['pass'],
@@ -97,28 +105,55 @@ def set_user(params, db_session, session):
         db_session.commit()
 
 
-def set_query(session, params, db_session):
-    print(time_now(str(datetime.now())))
-    query = Query(session['user_id'],
-                  time_now(str(datetime.now())),
-                  params['focal_length'],
-                  params['ps_width'],
-                  params['ps_height'],
-                  params['fly_height'],
-                  params['battery_capacity'],
-                  params['fly_loss'],
-                  params['photo_loss']
-                  )
-    db_session.add(query)
-    db_session.commit()
+def set_query(session, params, db_session, l_files):
+    print("file", l_files['myFile'].content_type)
+    if params['latitude-GC'] == '' and 'myFile' not in l_files:
+        print("WoW")
+        session["polygon doesn't exist"] = True
+        return -1
+
+    else:
+        print(time_now(str(datetime.now())))
+        query = Query(session['user_id'],
+                      time_now(str(datetime.now())),
+                      params['focal_length'],
+                      params['ps_width'],
+                      params['ps_height'],
+                      params['fly_height'],
+                      params['battery_capacity'],
+                      params['fly_loss'],
+                      params['photo_loss']
+                      )
+        db_session.add(query)
+        db_session.commit()
+
+        obj = db_session.query(Query).filter_by(user_id=session['user_id']).first()
+
+        return obj.id
 
 
-def set_coord(params, db_session):
-    coord = Coord(params['latitude'],
-                  params['longitude'],
-                  params['query_id'])
+def set_coord(params, db_session, query_id):
 
-    db_session.add(coord)
+    latitude_gc = params['latitude-GC'].split()
+    longitude_gc = params['longitude-GC'].split()
+    latitude_dms = params['latitude-DMS'].split()
+    longitude_dms = params['longitude-DMS'].split()
+
+    print(longitude_dms)
+    print(latitude_dms)
+    print(latitude_gc)
+    print(longitude_gc)
+
+    for i in range(len(latitude_dms)):
+        coord = Coord(latitude_gc[i],
+                      longitude_gc[i],
+                      latitude_dms[i],
+                      longitude_dms[i],
+                      query_id
+                      )
+
+        db_session.add(coord)
+
     db_session.commit()
 
 
@@ -164,6 +199,24 @@ def same_nickname(db_session, nickname):
         if person.nickname == nickname:
             return True
     return False
+
+
+def fill_session(session):
+    session['Wrong_nickname'] = False
+    session['is_logged'] = False
+    session['Wrong_password'] = False
+    session['valid_email'] = True
+    session['password_match_error'] = False
+    session['identiсal_nick_error'] = False
+
+
+def clear_errors(session):
+    session['Wrong_nickname'] = False
+    session['valid_email'] = True
+    session['Wrong_password'] = False
+    session['password_match_error'] = False
+    session['identiсal_nick_error'] = False
+    session["polygon doesn't exist"] = False
 
 
 mapper(User, user_table)

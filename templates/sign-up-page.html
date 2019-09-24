@@ -17,22 +17,22 @@
       <input type="text" class="sign-up-page-info input" name="email" placeholder="Адрес электронной почты" required>
       <br><br>
       <label><big class="main-text">Пароль</big></label>
-      <input type="password" class="sign-up-page-info input" name="pass" placeholder="Пароль" required>
+      <input type="password" class="sign-up-page-info input" name="pass" placeholder="Пароль" minlength="8" required>
       <br><br>
       <label><big class="main-text">Еще раз пароль</big></label>
-      <input type="password" class="sign-up-page-info input" name="checkpass" placeholder="Для убедительности" required>
+      <input type="password" class="sign-up-page-info input" name="checkpass" minlength="8" placeholder="Для убедительности" required>
       <br><br>
       <button class="button" type="submit">Відправити</button>
     </form>
     </div>
-   {% if session['password_match_error'] %}
     <script>
-            alert("Пароли не совпадают")
+            {% if session['password_match_error'] %}
+                alert("Пароли не совпадают")
+            {% elif session['identiсal_nick_error'] %}
+                alert("Данный никнейм занят")
+            {% elif not session['valid_email'] %}
+                alert("не валидная почта")
+            {% endif %}
     </script>
-   {% elif session['identiсal_nick_error'] %}
-   <script>
-            alert("Данный никнейм занят")
-   </script>
-   {% endif %}
   </body>
 </html>
