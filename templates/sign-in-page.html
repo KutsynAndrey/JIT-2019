@@ -17,15 +17,12 @@
         <br><br>
         <button class="button" type="submit">Відправити</button>
       </form>
-    {% if session['Wrong_password'] %}
     <script>
-        alert("Неверный пароль")
+        {% if session['Wrong_password'] %}
+            alert("Неверный пароль")
+        {% elif session['Wrong_nickname'] %}
+            alert("Аккаунта с таким ником не существует")
+        {% endif %}
     </script>
-    {% elif session['Wrong_nickname'] %}
-    <script>
-        alert("Аккаунта с таким ником не существует")
-    </script>
-    {% endif %}
-
    </body>
 </html>

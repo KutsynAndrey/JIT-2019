@@ -6,6 +6,16 @@ body{
     color: white;
 }
 
+.cmn-ppp-error
+{
+    background-color: #ffbaba;
+}
+
+.cmn-ppp-error > .cmn-text
+{
+    color: #d8000c;
+}
+
 
 .sign-up-page-block {
   position: relative;

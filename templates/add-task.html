@@ -10,9 +10,7 @@
 		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
 		<link href='../static/css/add-task.css' rel='stylesheet'>
 	</head>
-	<body>
         {% include 'nav.html' %}
-		<!--map-->
 		<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
 		<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.js'></script>
 		<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/>
@@ -24,7 +22,7 @@
         <div class = "main-functional">
             <div class="map" id='map'></div>
             <div class="input-box">
-                <form class="form" method="post">
+                <form class="form" method="post" enctype="multipart/form-data">
                     <div class='div'>
                         <label class="label">Фокусна відстань (м)</label><br>
                         <input class="input" type="text" name="focal_length" placeholder="Наприклад, 0.01" required>
@@ -58,20 +56,22 @@
                         <button class="button" type="submit" id='submit'>Відправити</button>
                         <button class="button" type="reset">Скинути</button>
                     </div>
+                    <div name='PolygonsCoords' class='coords'>
+                         <input type="text" id='latitude-GC' name='latitude-GC'>
+                         <input type="text" id='longitude-GC' name='longitude-GC'>
+                         <input type="text" id='latitude-DMS' name='latitude-DMS'>
+                         <input type="text" id='longitude-DMS' name='longitude-DMS'>
+                    </div>
                 </form>
             </div>
         </div>
-
-        <!--Save Coords-->
-        <form name='PolygonsCoords' class='coords'>
-            <input type="text" id='latitude-GC' name="latitude-GC">
-            <input type="text" id='longitude-GC'  name="longitude-GC">
-            <input type="text" id='latitude-DMS' name="latitude-DMS">
-            <input type="text" id='longitude-DMS' name="longitude-DMS">
-        </form>
-        <!--Save Coords-->
-
+        
         <!--map-->
 		<script src="../static/scripts/add-task.js"></script>
+        <script>
+            {% if session["polygon doesn't exist"] %}
+                alert("Полигон не выбран");
+            {% endif %}
+        </script>
 	</body>
 </html>

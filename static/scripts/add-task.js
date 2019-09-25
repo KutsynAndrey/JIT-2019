@@ -88,6 +88,7 @@ function DMS(coordinate) {
 }
 
 function ShowPolygon() {
+    read()
     let latitude = document.getElementsByClassName("latitude"),
         longitude = document.getElementsByClassName("longitude"),
         polygonId = RandomKey(),
@@ -215,4 +216,13 @@ function ChangeParameters(polygon) {
     console.log(distanceLat, distanceLong, zoom);
 
     map.flyTo({center: center, zoom: zoom / 2});
+}
+
+function read(){
+    console.log("reading.....");
+    var fileUpload=document.getElementById("csvFile").files[0];
+    var reader = new FileReader();
+    reader.readAsText(fileUpload/*, "UTF-8"*/);
+    console.log(fileUpload)
+    console.log(reader)
 }
