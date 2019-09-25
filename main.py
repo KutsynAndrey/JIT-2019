@@ -38,7 +38,7 @@ def registration():
 def sign_in():
 	if request.method == 'POST':
 		if request.form['nickname']:
-			get_user(db_session, request.form['nickname'], request.form['password'])
+			get_user(db_session, request.form['nickname'], request.form['password'], session)
 			if session['is_logged']:
 				return redirect('/new-polygon')
 		if session['is_logged']:
