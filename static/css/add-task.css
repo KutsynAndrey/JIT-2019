@@ -34,15 +34,6 @@ body {
     bottom:0;
 }
 
-#new-inputs, #show-polygon {
-    margin: 0;
-    top: 0;
-    bottom: 0;
-    margin-top: 1.8vw;
-    height: 30px;
-    font-size: 13px;
-}
-
 .coords {
     display: none;
 }
