@@ -37,16 +37,13 @@ def registration():
 
 @app.route('/sign-in-page', methods=['POST', 'GET'])
 def sign_in():
-	clear_errors(session)
-	if request.method == 'POST':
-		if request.form['nickname']:
-			get_user(db_session, request.form['nickname'], request.form['password'], session)
-			if session['is_logged']:
-				return redirect('/new-polygon')
-		if session['is_logged']:
-			return redirect('/new-polygon')
-	return render_template('sign-in-page.html', session=session)
-
+    clear_errors(session)
+    if request.method == 'POST':
+        if request.form['nickname']:
+            get_user(db_session, request.form['nickname'], request.form['password'], session)
+        if session['is_logged']:
+            return redirect('/new-polygon')
+    return render_template('sign-in-page.html', session=session)
 
 
 @app.route('/logout')
