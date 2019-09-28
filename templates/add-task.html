@@ -16,6 +16,7 @@
 		<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-draw/v1.0.9/mapbox-gl-draw.css' type='text/css'/>
 		<script src='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.min.js'></script>
 		<link rel='stylesheet' href='https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v4.4.1/mapbox-gl-geocoder.css' type='text/css' />
+        <script src='https://api.mapbox.com/mapbox.js/plugins/turf/v2.0.2/turf.min.js'></script>
 		<!--map-->
 
         <div class = "main-functional">
@@ -50,26 +51,9 @@
                         <label class="label">Витрати заряду на політ (mAh)</label><br>
                         <input class="input" type="text" name="fly_loss" placeholder="Наприклад, 1000" required>
                     </div>
-                    <br>
-                    <div>Координати полігону(довгота та широта)</div>
-                    <div></div>
-                    <div></div>
                     <div></div>
                     <div class='div'>
-                        <label class="label">Довгота</label>
-                        <input class="input latitude" type="number" placeholder="Наприклад, -43.32">
-                    </div>
-                    <div class='div'>
-                        <label class="label">Широта</label>
-                        <input class="input longitude" type="number" placeholder="Наприклад, -43.32">
-                    </div>
-                    <button id = 'new-inputs' class='button' type="button">Додати точку</button>
-                    <button id = 'show-polygon' class='button'  type="button">Побудувати полігон</button>
-                    <div class="upload-file">
-                        <input type="file" name="myFile" id="csvFile">
-                    </div>
-                    <div class='div'>
-                        <button class="button" type="submit"  id='submit'>Відправити</button>
+                        <button class="button" type="submit" id='submit'>Відправити</button>
                         <button class="button" type="reset">Скинути</button>
                     </div>
                     <div name='PolygonsCoords' class='coords'>
@@ -81,6 +65,7 @@
                 </form>
             </div>
         </div>
+        
         <!--map-->
 		<script src="../static/scripts/add-task.js"></script>
 
