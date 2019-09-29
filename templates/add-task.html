@@ -68,9 +68,36 @@
         
         <!--map-->
 		<script src="../static/scripts/add-task.js"></script>
+
         <script>
-            {% if session["polygon doesn't exist"] %}
+            {% if session["polygon-doesn't-exist"] %}
                 alert("Полигон не выбран");
+            {% elif session['two-ways-building'] %}
+                alert("Выберите один метод постройки полигона");
+            {% elif session['not-a-csv'] %}
+                alert("Выбран файл не csv формата");
+            {% elif session['is_nan'][0] %}
+                alert("Неопределенный тип в ячейке {{ (session['is_nan'][1], session['is_nan'][2]) }}");
+            {% elif session['long_gc_out'][0] %}
+                alert("Географическая долгота вышла за пределы в ячейке {{ (session['long_gc_out'][1], session['long_gc_out'][2]) }}");
+            {% elif session['lat_gc_out'][0] %}
+                alert("Географическая широта вышла за пределы в ячейке {{ (session['lat_gc_out'][1], session['lat_gc_out'][2]) }}");
+            {% elif session['long_not_3'][0] %}
+                alert("GPS координаты должны состоять из 3-х чисел в ячейке{{ (session['long_not_3'][1], session['long_not_3'][2]) }}");
+            {% elif session['lat_not_3'][0] %}
+                alert("GPS координаты должны состоять из 3-х чисел в ячейке{{ (session['lat_not_3'][1], session['lat_not_3'][2]) }}");
+            {% elif session['lat_dms_out_d'][0] %}
+                alert("Величина вышла за пределы в ячейке {{ (session['lat_dms_out_d'][1], session['lat_dms_out_d'][2]) }}");
+            {% elif session['lat_dms_out_m'][0]%}
+                alert("Величина вышла за пределы в ячейке {{ (session['lat_dms_out_m'][1], session['lat_dms_out_m'][2]) }}");
+            {% elif session['lat_dms_out_s'][0] %}
+                alert("Величина вышла за пределы в ячейке {{ (session['lat_dms_out_s'][1], session['lat_dms_out_s'][2]) }}");
+            {% elif session['long_dms_out_d'][0] %}
+                alert("Величина вышла за пределы в ячейке {{ (session['long_dms_out_d'][1], session['long_dms_out_d'][2]) }}");
+            {% elif session['long_dms_out_m'][0] %}
+                alert("Величина вышла за пределы в ячейке {{ (session['long_dms_out_m'][1], session['long_dms_out_m'][2]) }}");
+            {% elif session['long_dms_out_s'][0]  %}
+                alert("Величина вышла за пределы в ячейке {{ (session['long_dms_out_s'][1], session['long_dms_out_s'][2]) }}");
             {% endif %}
         </script>
 	</body>
