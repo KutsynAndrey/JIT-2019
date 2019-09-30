@@ -67,13 +67,19 @@ def validation_csv(file):
     table = table.to_numpy()
     gate = np.array([-1, -1, '-1', '-1'], dtype=object)
     polygons = []
-    coordinates = []
+    coordinates = [[], [], [], []]
     print(table)
     for ii, row in enumerate(table):
         if np.array_equal(row, gate):
             polygons.append(coordinates)
+            coordinates = [[], [], [], []]
             continue
-        coordinates.append([row[0], row[1]])
+
+        coordinates[0].append(row[0])
+        coordinates[1].append(row[1])
+        coordinates[2].append(row[2])
+        coordinates[3].append(row[3])
+
         print(ii, row.size)
         for i, item in enumerate(row):
             print("ITEM", type(item))
@@ -101,6 +107,7 @@ def validation_csv(file):
             return 10, ii, 2
         if int(lat_dms[2]) > 60 or int(lat_dms[2]) < 0:
             return 11, ii, 3
+    polygons.append(coordinates)
     return 0, 0, polygons
 
 

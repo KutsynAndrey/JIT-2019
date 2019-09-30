@@ -129,8 +129,8 @@ def set_user(params, db_session, session):
 
 
 def set_query(session, params, db_session, l_files):
-    print("file", l_files['myFile'].content_type)
-    file = l_files['myFile']
+    print("file", l_files['myCSV'].content_type)
+    file = l_files['myCSV']
     if params['latitude-GC'] == '' and file.content_type == 'application/octet-stream':
         print("WoW")
         session["polygon-doesn't-exist"] = True
@@ -146,21 +146,35 @@ def set_query(session, params, db_session, l_files):
         if code:
             fill_session_by_valid_code(session, code, row, column)
             return -1
-        query = Query(session['user_id'],
-                      time_now(str(datetime.now())),
-                      params['focal_length'],
-                      params['ps_width'],
-                      params['ps_height'],
-                      params['fly_height'],
-                      params['battery_capacity'],
-                      params['fly_loss'],
-                      params['photo_loss']
-                      )
-        db_session.add(query)
-        db_session.commit()
+        else:
+
+            query = Query(session['user_id'],
+                          time_now(str(datetime.now())),
+                          params['focal_length'],
+                          params['ps_width'],
+                          params['ps_height'],
+                          params['fly_height'],
+                          params['battery_capacity'],
+                          params['fly_loss'],
+                          params['photo_loss']
+                          )
+
+            db_session.add(query)
+            db_session.commit()
+            obj = db_session.query(Query).filter_by(user_id=session['user_id'])[-1]
+            query_id = obj.id
+
+            print(column)
+            for i in range(len(column)):
+                pol_coordinates = column[i]
+                if i == 0:
+                    set_polygon(db_session, 1, query_id, pol_coordinates, True)
+                else:
+                    set_polygon(db_session, 0, query_id, pol_coordinates, True)
 
     else:
         print(time_now(str(datetime.now())))
+
         query = Query(session['user_id'],
                       time_now(str(datetime.now())),
                       params['focal_length'],
@@ -171,6 +185,7 @@ def set_query(session, params, db_session, l_files):
                       params['fly_loss'],
                       params['photo_loss']
                       )
+
         db_session.add(query)
         db_session.commit()
         obj = db_session.query(Query).filter_by(user_id=session['user_id'])[-1]
@@ -189,11 +204,13 @@ def set_query(session, params, db_session, l_files):
                 set_polygon(db_session, 0, query_id, pol_coordinates)
 
 
-def set_polygon(db_session, polygon_type, query_id, coordinates):
-    coordinates[0] = coordinates[0].split()
-    coordinates[1] = coordinates[1].split()
-    coordinates[2] = coordinates[2].split()
-    coordinates[3] = coordinates[3].split()
+def set_polygon(db_session, polygon_type, query_id, coordinates, from_csv=False):
+
+    if from_csv is False:
+        coordinates[0] = coordinates[0].split()
+        coordinates[1] = coordinates[1].split()
+        coordinates[2] = coordinates[2].split()
+        coordinates[3] = coordinates[3].split()
 
     polygon = Polygon(polygon_type, query_id)
     db_session.add(polygon)
@@ -237,7 +254,7 @@ def get_user(db_session, nickname, password, session):
         session['user_id'] = obj.id
 
 
-def get_query(db_session, session):
+def get_queries(db_session, session):
     return db_session.query(Query).filter_by(user_id=session['user_id'])
 
 
