@@ -197,7 +197,7 @@ def get_coords(segments, size, y_coords, y_coords_vertex):
 			print(result)
 	return coords_photo
 
-def algorithm():
+def algorithm(polygon_input = [], size = []):
 	#Coords of polygon without last element(it is exactly first)
 	# polygon_input = [[-91.87083756449519, 42.76116131487211], [-91.86988936752181, 42.76069720847619],
 	# 			[-91.8687641737798, 42.76086428717932], [-91.86827111135369, 42.7612355715728],
