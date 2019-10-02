@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, session, request, redirect
 from db import Session
-from db import set_coord, set_query, set_user, get_user, get_query, get_coord
+from db import set_coord, set_query, set_user, get_user, get_queries, get_coord
 from functional import clear_errors, init_session
 
 
@@ -54,7 +54,7 @@ def logout():
 
 @app.route('/tasks')
 def tasks():
-    tasks_list = get_query(db_session, session)
+    tasks_list = get_queries(db_session, session)
     coord_list = get_coord(db_session, tasks_list)
     return render_template('tasks.html', session=session, tasks_list=tasks_list, coord_list=coord_list)
 

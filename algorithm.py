@@ -1,6 +1,7 @@
 import copy
 from objects import *
 
+
 def remove_elements(y_coords):
 	remove_y_coords = []
 	count_remove = 0
@@ -13,6 +14,7 @@ def remove_elements(y_coords):
 
 	return y_coords
 
+
 def add_coords(y_coords, size):
 	y_min = min(y_coords)
 	y_max = max(y_coords)
@@ -23,6 +25,7 @@ def add_coords(y_coords, size):
 	y_coords.sort()
 
 	return y_coords
+
 
 def add_vertex(y_dict_vertex, x_dict_segment, y_coords, polygon):
 	for el in y_coords:
@@ -36,6 +39,7 @@ def add_vertex(y_dict_vertex, x_dict_segment, y_coords, polygon):
 
 	return y_dict_vertex
 
+
 def convert_polygon(polygon_input):
 	polygon = []
 	for point in polygon_input:
@@ -46,8 +50,10 @@ def convert_polygon(polygon_input):
 
 	return polygon
 
+
 def equality(a, b):
 	return abs(a - b) < 10 ** (-8)
+
 
 def algorithm():
 	#Coords of polygon without last element(it is exactly first)
