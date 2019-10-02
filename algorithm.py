@@ -5,6 +5,7 @@ import numpy as np
 import time
 from objects import *
 
+
 def remove_elements(y_coords):
 	remove_y_coords = []
 	count_remove = 0
@@ -35,6 +36,7 @@ def add_y_coords(size, polygon):
 
 	return y_coords
 
+
 def add_vertex(y_dict_vertex, x_dict_segment, y_coords, polygon):
 	for el in y_coords:
 		y_dict_vertex[el] = []
@@ -48,6 +50,7 @@ def add_vertex(y_dict_vertex, x_dict_segment, y_coords, polygon):
 
 	return y_dict_vertex
 
+
 def convert_polygon(polygon_input):
 	polygon = []
 	for i in range(len(polygon_input)):
@@ -59,6 +62,7 @@ def convert_polygon(polygon_input):
 	# 	polygon[i].y *= 111 * 1000
 
 	return polygon
+
 
 def equality(a, b):
 	return abs(a - b) < 10 ** (-8)

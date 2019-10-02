@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, session, request, redirect
 from db import Session
-from db import set_coord, set_query, set_user, get_user, get_query, get_coord
+from db import set_coord, set_query, set_user, get_user, get_queries, get_coord
 from functional import clear_errors, init_session
 
 

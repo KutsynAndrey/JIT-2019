@@ -3,10 +3,10 @@ from sqlalchemy import Text, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import mapper, sessionmaker
 from datetime import datetime
 from validate_email import validate_email
-from functional import time_now, validation_csv, fill_session_by_valid_code
+from functional import time_now, validation_csv, fill_session_by_valid_code, validate_polygon
 
 
-engine = create_engine("mysql+mysqlconnector://ollegg:sqlollegg@localhost/JIT", echo=True)
+engine = create_engine("mysql+mysqlconnector://user:Dgk.cf[ytn,eleotuj@localhost/JIT", echo=True)
 metadata = MetaData()
 Session = sessionmaker(bind=engine)
 
@@ -45,6 +45,14 @@ coordinates_table = Table('coordinates', metadata,
                           Column('polygon_id', Integer, ForeignKey('polygon.id'))
                           )
 
+path_coordinates = Table('path_coordinates', metadata,
+                         Column('id', Integer, primary_key=True),
+                         Column('latitude_gc', Float),
+                         Column('longitude_gc', Float),
+                         Column('latitude_dms', String(20)),
+                         Column('longitude_dms', String(20)),
+                         Column('query_id', Integer, ForeignKey('queries.id'))
+                         )
 
 metadata.create_all(engine)
 
@@ -102,10 +110,24 @@ class Polygon(object):
         return "pass"
 
 
+class PathCoord(object):
+
+    def __init__(self, latitude_gc, longitude_gc, latitude_dms, longitude_dms, query_id):
+        self.latitude_gc = latitude_gc
+        self.longitude_gc = longitude_gc
+        self.latitude_dms = latitude_dms
+        self.longitude_dms = longitude_dms
+        self.query_id = query_id
+
+    def __repr__(self):
+        return "<PathCoord('%s', '%s') from Polygon('%s')>" % (self.longitude_gc, self.latitude_gc, self.query_id)
+
+
 mapper(User, user_table)
 mapper(Query, query_table)
 mapper(Coord, coordinates_table)
 mapper(Polygon, polygon_table)
+mapper(PathCoord, path_coordinates)
 
 
 def set_user(params, db_session, session):
@@ -129,8 +151,8 @@ def set_user(params, db_session, session):
 
 
 def set_query(session, params, db_session, l_files):
-    print("file", l_files['myFile'].content_type)
-    file = l_files['myFile']
+    print("file", l_files['myCSV'].content_type)
+    file = l_files['myCSV']
     if params['latitude-GC'] == '' and file.content_type == 'application/octet-stream':
         print("WoW")
         session["polygon-doesn't-exist"] = True
@@ -143,24 +165,45 @@ def set_query(session, params, db_session, l_files):
         return -1
     elif params['latitude-GC'] == '' and file.content_type == 'text/csv':
         code, row, column = validation_csv(file)
-        if code:
+        err, p = validate_polygon(column)
+        if err == 1:
+            session['polygon_has_less_than_3_dots'] = [True, p]
+            return -1
+        elif err == 2:
+            session['polygon_has_self-intersection'] = [True, p]
+            return -1
+        elif code:
             fill_session_by_valid_code(session, code, row, column)
             return -1
-        query = Query(session['user_id'],
-                      time_now(str(datetime.now())),
-                      params['focal_length'],
-                      params['ps_width'],
-                      params['ps_height'],
-                      params['fly_height'],
-                      params['battery_capacity'],
-                      params['fly_loss'],
-                      params['photo_loss']
-                      )
-        db_session.add(query)
-        db_session.commit()
+        else:
+
+            query = Query(session['user_id'],
+                          time_now(str(datetime.now())),
+                          params['focal_length'],
+                          params['ps_width'],
+                          params['ps_height'],
+                          params['fly_height'],
+                          params['battery_capacity'],
+                          params['fly_loss'],
+                          params['photo_loss']
+                          )
+
+            db_session.add(query)
+            db_session.commit()
+            obj = db_session.query(Query).filter_by(user_id=session['user_id'])[-1]
+            query_id = obj.id
+
+            print(column)
+            for i in range(len(column)):
+                pol_coordinates = column[i]
+                if i == 0:
+                    set_polygon(db_session, 1, query_id, pol_coordinates, True)
+                else:
+                    set_polygon(db_session, 0, query_id, pol_coordinates, True)
 
     else:
         print(time_now(str(datetime.now())))
+
         query = Query(session['user_id'],
                       time_now(str(datetime.now())),
                       params['focal_length'],
@@ -171,6 +214,7 @@ def set_query(session, params, db_session, l_files):
                       params['fly_loss'],
                       params['photo_loss']
                       )
+
         db_session.add(query)
         db_session.commit()
         obj = db_session.query(Query).filter_by(user_id=session['user_id'])[-1]
@@ -189,11 +233,13 @@ def set_query(session, params, db_session, l_files):
                 set_polygon(db_session, 0, query_id, pol_coordinates)
 
 
-def set_polygon(db_session, polygon_type, query_id, coordinates):
-    coordinates[0] = coordinates[0].split()
-    coordinates[1] = coordinates[1].split()
-    coordinates[2] = coordinates[2].split()
-    coordinates[3] = coordinates[3].split()
+def set_polygon(db_session, polygon_type, query_id, coordinates, from_csv=False):
+
+    if from_csv is False:
+        coordinates[0] = coordinates[0].split()
+        coordinates[1] = coordinates[1].split()
+        coordinates[2] = coordinates[2].split()
+        coordinates[3] = coordinates[3].split()
 
     polygon = Polygon(polygon_type, query_id)
     db_session.add(polygon)
@@ -237,7 +283,7 @@ def get_user(db_session, nickname, password, session):
         session['user_id'] = obj.id
 
 
-def get_query(db_session, session):
+def get_queries(db_session, session):
     return db_session.query(Query).filter_by(user_id=session['user_id'])
 
 

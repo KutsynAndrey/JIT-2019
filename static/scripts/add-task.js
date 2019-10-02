@@ -176,6 +176,7 @@ function CenterPolygon(polygon) {
     return [latitude, longitude];
 }
 
+
 function MapZoom(max) {
     if(max < 100) return 22;
     if(max < 250) return 21;
@@ -201,6 +202,7 @@ function MapZoom(max) {
     if(max < 500000000) return 1;
     if(max < 1000000000) return 0;
 }
+
 
 function ChangeParameters(polygon) {
     let center = CenterPolygon(polygon),
