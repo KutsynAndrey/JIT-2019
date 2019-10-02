@@ -100,6 +100,10 @@
                 alert("Величина вышла за пределы в ячейке {{ (session['long_dms_out_m'][1], session['long_dms_out_m'][2]) }}");
             {% elif session['long_dms_out_s'][0]  %}
                 alert("Величина вышла за пределы в ячейке {{ (session['long_dms_out_s'][1], session['long_dms_out_s'][2]) }}");
+            {% elif session['polygon_has_less_than_3_dots'][0]  %}
+                alert("Полигон номер {{ session['polygon_has_less_than_3_dots'][1] }} имеет меньше чем 4 точки");
+            {% elif session['polygon_has_self-intersection'][0]  %}
+                alert("Полигон номер {{ session['polygon_has_self-intersection'][1] }} имеет самопересечение");
             {% endif %}
         </script>
 	</body>

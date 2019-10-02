@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 import os
+from objects import Point
 
 
 def time_now(t_now):
@@ -35,6 +36,8 @@ def init_session(session):
     session['long_dms_out_m'] = [False, 0, 0]
     session['lat_dms_out_s'] = [False, 0, 0]
     session['long_dms_out_s'] = [False, 0, 0]
+    session['polygon_has_less_than_3_dots'] = [False, 0]
+    session['polygon_has_self-intersection'] = [False, 0]
 
 
 def clear_errors(session):
@@ -59,6 +62,8 @@ def clear_errors(session):
     session['long_dms_out_m'] = [False, 0, 0]
     session['lat_dms_out_s'] = [False, 0, 0]
     session['long_dms_out_s'] = [False, 0, 0]
+    session['polygon_has_less_than_3_dots'] = [False, 0]
+    session['polygon_has_self-intersection'] = [False, 0]
 
 
 def validation_csv(file):
@@ -68,7 +73,6 @@ def validation_csv(file):
     gate = np.array([-1, -1, '-1', '-1'], dtype=object)
     polygons = []
     coordinates = [[], [], [], []]
-    print(table)
     for ii, row in enumerate(table):
         if np.array_equal(row, gate):
             polygons.append(coordinates)
@@ -80,9 +84,7 @@ def validation_csv(file):
         coordinates[2].append(row[2])
         coordinates[3].append(row[3])
 
-        print(ii, row.size)
         for i, item in enumerate(row):
-            print("ITEM", type(item))
             if item != item:
                 return 1, ii, i
         long_dms = row[2].split('-')
@@ -111,9 +113,31 @@ def validation_csv(file):
     return 0, 0, polygons
 
 
-def validate_polygon(coordinates):
-    sx = coordinates[0][0]
-    sy = coordinates[0][1]
+def validate_polygon(polygons):
+
+    print(polygons)
+    for index, polygon in enumerate(polygons):
+        dots = []
+        last_segments = []
+        for ii in range(len(polygon[0])):
+            dot = Point(polygon[0][ii], polygon[1][ii])
+            dots.append(dot)
+        print(dots)
+        if len(dots) < 4:
+            return 1, index
+        for ii in range(len(dots)-1):
+            segment = (dots[ii], dots[ii+1])
+            if len(last_segments) > 0:
+                for ind, seg in enumerate(last_segments):
+                    print("LEN", len(last_segments))
+                    if ii - ind == 1:
+                        break
+                    if intersect_segments(seg[0], seg[1], segment[0], segment[1]):
+                        print("INTERSECTION in", seg[0], seg[1], segment[0], segment[1])
+                        return 2, index
+            last_segments.append(segment)
+
+    return 0, 0
 
 
 def fill_session_by_valid_code(session, code, row, column):
@@ -161,3 +185,23 @@ def fill_session_by_valid_code(session, code, row, column):
         session['lat_dms_out_s'][0] = True
         session['lat_dms_out_s'][1] = row
         session['lat_dms_out_s'][2] = column
+
+
+def oriented_triangle_area(dot1, dot2, dot3):
+    return (dot2.x - dot1.x) * (dot3.y - dot1.y) - (dot2.y - dot1.y) * (dot3.x - dot1.x)
+
+
+def projection_intersect(a, b, c, d):
+    if a > b:
+        a, b = b, a
+    if c > d:
+        c, d = d, c
+    return max(a, c) <= min(b, d)
+
+
+def intersect_segments(a, b, c, d):
+    return (projection_intersect(a.x, b.x, c.x, d.x)
+            and projection_intersect(a.y, b.y, c.y, d.y)
+            and oriented_triangle_area(a, b, c) * oriented_triangle_area(a, b, d) <= 0
+            and oriented_triangle_area(c, d, a) * oriented_triangle_area(c, d, b) <= 0)
+
