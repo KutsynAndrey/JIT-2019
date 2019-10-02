@@ -8,7 +8,7 @@
 		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
         <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
 		<link href='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.css' rel='stylesheet' />
-		<link href='../static/css/add-task.css' rel='stylesheet'>
+		<link href='../static/css/task.css' rel='stylesheet'>
 	</head>
         {% include 'nav.html' %}
 		<script src='https://api.tiles.mapbox.com/mapbox.js/plugins/turf/v3.0.11/turf.min.js'></script>
@@ -25,36 +25,31 @@
                 <form class="form" method="post" enctype="multipart/form-data">
                     <div class='div'>
                         <label class="label">Фокусна відстань (м)</label><br>
-                        <input class="input" type="text" name="focal_length" placeholder="Наприклад, 0.01" required readonly>
+                        <input class="input" type="text" name="focal_length" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Допустима висота польоту (м)</label><br>
-                        <input class="input" type="text" name="fly_height" placeholder="Наприклад, 1000" required readonly>
+                        <input class="input" type="text" name="fly_height" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Висота фотосенсора (мм)</label><br>
-                        <input class="input" type="text" name="ps_height" placeholder="Наприклад, 100" required readonly>
+                        <input class="input" type="text" name="ps_height" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Ширина фотосенсора (мм)</label><br>
-                        <input class="input" type="text" name="ps_width" placeholder="Наприклад, 100" required readonly>
+                        <input class="input" type="text" name="ps_width" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Об'єм батареї дрона (mAh)</label><br>
-                        <input class="input" type="text" name="battery_capacity" placeholder="Наприклад, 1000" required readonly>
+                        <input class="input" type="text" name="battery_capacity" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Витрати заряду на фото (mAh)</label><br>
-                        <input class="input" type="text" name="photo_loss" placeholder="Наприклад, 10" required readonly>
+                        <input class="input" type="text" name="photo_loss" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Витрати заряду на політ (mAh)</label><br>
-                        <input class="input" type="text" name="fly_loss" placeholder="Наприклад, 1000" required readonly>
-                    </div>
-                    <div></div>
-                    <div class='div'>
-                        <button class="button" type="submit" id='submit'>Відправити</button>
-                        <button class="button" type="reset">Скинути</button>
+                        <input class="input" type="text" name="fly_loss" required readonly>
                     </div>
                     <div name='PolygonsCoords' class='coords'>
                          <input type="text" id='latitude-GC' name='latitude-GC'>
@@ -67,7 +62,7 @@
         </div>
         
         <!--map-->
-		<script src="../static/scripts/add-task.js"></script>
+		<script src="../static/scripts/task.js"></script>
         <script>
             {% if session["polygon doesn't exist"] %}
                 alert("Полигон не выбран");

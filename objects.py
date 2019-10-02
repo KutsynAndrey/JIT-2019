@@ -3,6 +3,12 @@ class Point():
 		self.x = x
 		self.y = y
 
+class Vertex():
+	def __init__(self, polygon, number, x):
+		self.polygon = polygon
+		self.number = number
+		self.x = x
+
 class Vector():
 	def __init__(self, point_start, point_end):
 		self.x = point_end.x - point_start.x
