@@ -2,14 +2,15 @@
 <html>
    <head>
        {% include 'header.html' %}
+       <title>Вхід</title> 
       <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/sign-in-page.css') }}"/>
    </head>
    <body>
     {% include 'nav.html' %}
       <form id='sign-in-page-div' method="post">
-        <h1>Вход</h1>
+        <h1>Вхід</h1>
         <br>
-        <label class='label main-text'><big>Никнейм</big></label>
+        <label class='label main-text'><big>Нікнейм</big></label>
         <input class='sign-in-page-entry-field input' name="nickname" type="text" placeholder="Никнейм" required>
         <br><br>
         <label class='label main-text'><big>Пароль</big></label>
@@ -19,9 +20,9 @@
       </form>
     <script>
         {% if session['Wrong_password'] %}
-            alert("Неверный пароль")
+            alert("Невірний пароль")
         {% elif session['Wrong_nickname'] %}
-            alert("Аккаунта с таким ником не существует")
+            alert("Профіль с таким ніком не існує")
         {% endif %}
     </script>
    </body>

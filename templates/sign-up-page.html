@@ -2,15 +2,16 @@
 <html>
   <head>
     {% include 'header.html' %}
+    <title>Реєстрація</title> 
     <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/sign-up-page.css') }}" />
   </head>
   <body>
    {% include 'nav.html' %}
     <div class = "sign-up-page-block">
     <form method="post" action="/sign-up-page">
-      <h1 class="main-text">Регистрация</h1>
+      <h1 class="main-text">Реєстрація</h1>
       <br>
-      <label><big class="main-text">Никнейм</big></label>
+      <label><big class="main-text">Нікнейм</big></label>
       <input type="text" class="sign-up-page-info input" name="nick" placeholder="Введите ник" required>
       <br><br>
       <label><big class="main-text">Почта</big></label>
@@ -19,7 +20,7 @@
       <label><big class="main-text">Пароль</big></label>
       <input type="password" class="sign-up-page-info input" name="pass" placeholder="Пароль" minlength="8" required>
       <br><br>
-      <label><big class="main-text">Еще раз пароль</big></label>
+      <label><big class="main-text">Знову пароль</big></label>
       <input type="password" class="sign-up-page-info input" name="checkpass" minlength="8" placeholder="Для убедительности" required>
       <br><br>
       <button class="button" type="submit">Відправити</button>
@@ -27,11 +28,11 @@
     </div>
     <script>
             {% if session['password_match_error'] %}
-                alert("Пароли не совпадают")
+                alert("Пароли не збігаються")
             {% elif session['identiсal_nick_error'] %}
-                alert("Данный никнейм занят")
+                alert("Цей нікнейм занят")
             {% elif not session['valid_email'] %}
-                alert("не валидная почта")
+                alert("Не вірна почта")
             {% endif %}
     </script>
   </body>

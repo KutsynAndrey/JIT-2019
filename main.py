@@ -52,11 +52,16 @@ def logout():
     return redirect('/')
 
 
-@app.route('/tasks')
-def tasks():
-    tasks_list = get_queries(db_session, session)
+@app.route('/task')
+def task():
+    return render_template('task.html')
+
+
+@app.route('/profile/Rostik')
+def profile():
+    tasks_list = get_query(db_session, session)
     coord_list = get_coord(db_session, tasks_list)
-    return render_template('tasks.html', session=session, tasks_list=tasks_list, coord_list=coord_list)
+    return render_template('profile.html', session=session, tasks_list=tasks_list, coord_list=coord_list)
 
 
 if __name__ == '__main__':

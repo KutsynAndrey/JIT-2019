@@ -1,0 +1,29 @@
+body {
+    background-color: #37393c;
+    color: white;
+}
+
+.container {
+    width: 75vw;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.user-info {
+    width: 25vw;
+    margin-left: 9vw;
+    float: left;
+    font-size: 24px;
+}
+
+.table {
+    padding-top: 85px;
+}
+
+.inquiries {
+    font-size: 24px;
+}
+
+td {
+	font-weight: bolder;
+}
