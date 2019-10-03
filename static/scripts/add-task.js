@@ -134,11 +134,24 @@ function SaveCoords() {
     console.log(polygonsGC)
     for(let id = 0; id < polygonsId.length; id++) {
         for(let point = 0; point < polygonsGC[polygonsId[id]].length; point++) {
-            LatitudeGC.value += polygonsGC[polygonsId[id]][point][0] + ' ';
-            LongitudeGC.value += polygonsGC[polygonsId[id]][point][1] + ' ';
+            LatitudeGC.value += polygonsGC[polygonsId[id]][point][0];
+            LongitudeGC.value += polygonsGC[polygonsId[id]][point][1];
 
-            LatitudeDMS.value += polygonsDMS[polygonsId[id]][point][0] + ' ';
-            LongitudeDMS.value += polygonsDMS[polygonsId[id]][point][1] + ' ';
+            LatitudeDMS.value += polygonsDMS[polygonsId[id]][point][0];
+            LongitudeDMS.value += polygonsDMS[polygonsId[id]][point][1];
+            if(point != polygonsGC[polygonsId[id]].length - 1) {
+                LatitudeGC.value += ' ';
+                LongitudeGC.value += ' ';
+
+                LatitudeDMS.value += ' ';
+                LongitudeDMS.value += ' ';
+            } else {
+                LatitudeGC.value += '$';
+                LongitudeGC.value += '$';
+
+                LatitudeDMS.value += '$';
+                LongitudeDMS.value += '$';
+            }
         }
     }
 
