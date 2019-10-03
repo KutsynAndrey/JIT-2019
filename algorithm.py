@@ -2,9 +2,7 @@ import copy
 import math
 import random
 import numpy as np
-import time
 from objects import *
-
 
 def remove_elements(y_coords):
 	remove_y_coords = []
@@ -50,7 +48,6 @@ def add_vertex(y_dict_vertex, x_dict_segment, y_coords, polygon):
 
 	return y_dict_vertex
 
-
 def convert_polygon(polygon_input):
 	polygon = []
 	for i in range(len(polygon_input)):
@@ -63,9 +60,10 @@ def convert_polygon(polygon_input):
 
 	return polygon
 
-
 def equality(a, b):
-	return abs(a - b) < 10 ** (-8)
+	if (a > 0 and b > 0) or (a < 0 and b < 0):
+		return abs(abs(a) - abs(b)) < 10 ** (-8)
+	return 0
 
 def turn_polygon(polygon, radian):
 	sin = math.sin(radian)
@@ -77,6 +75,7 @@ def turn_polygon(polygon, radian):
 			polygon[i][j] = np.dot(matrix, [polygon[i][j].x, polygon[i][j].y])
 			polygon[i][j] = Point(polygon[i][j][0], polygon[i][j][1])
 
+
 	return polygon
 
 def get_segments(polygon, size):
@@ -84,15 +83,16 @@ def get_segments(polygon, size):
 	y_coords = add_y_coords(size, polygon)
 	# remove equal value
 	y_coords = remove_elements(y_coords)
+	# print('Y_COORDS:', y_coords)
+	# print()
 
 	# create dict
 	# y_dict_vertex = these are x_coords of vertex in each y_coords
 	# x_dict_segment = segments on each y_coords
-	y_dict_vertex = {}
-	x_dict_segment = {}
+	y_dict_vertex = MyTransformedDict()
+	x_dict_segment = MyTransformedDict()
 	# add vertex to each y_coords
 	y_dict_vertex = add_vertex(y_dict_vertex, x_dict_segment, y_coords, polygon)
-	result_segments = []
 
 	for iterator, y in enumerate(y_coords):
 		# print('Y=', y)
@@ -104,12 +104,12 @@ def get_segments(polygon, size):
 				x_dict_segment[y].append(Segment(polygon[vertex.polygon][vertex.number], polygon[vertex.polygon][vertex1], vertex.x))
 				x_dict_segment[y].append(Segment(polygon[vertex.polygon][vertex.number], polygon[vertex.polygon][vertex2], vertex.x))
 
-			result_segments.append(x_dict_segment[y])
 		else:
 			x_dict_segment[y] = copy.deepcopy(x_dict_segment[y_coords[iterator - 1]])
 			# do step on the each edge
 			for index, segment in enumerate(x_dict_segment[y]):
-				segment.x = segment.edge.x0 + segment.edge.vector.x * ((y - segment.edge.y0) / segment.edge.vector.y)
+				x_dict_segment[y][index].x = segment.edge.x0 + segment.edge.vector.x * ((y - segment.edge.y0) / segment.edge.vector.y)
+				# print(x_dict_segment[y][index])
 			# delete edge if it him end and create new new from to other vertex
 			remove_index = []
 			for vertex in y_dict_vertex[y]:
@@ -133,93 +133,103 @@ def get_segments(polygon, size):
 							remove_index.append(index)
 							remove_index.append(index + 1)
 						break
-				x_dict_segment[y].sort(key = lambda segment: segment.x)
-
-			x_segment = []
-			for index, el in enumerate(x_dict_segment[y]):
-				if index not in remove_index:
-					x_segment.append(x_dict_segment[y][index])
-			x_dict_segment[y] = x_segment
+				#ToDo 
+				# print(len(x_dict_segment[y]), "x_dict_segment:", x_dict_segment[y])
+				# print(len(remove_index), "remove_index:", remove_index)
+				x_segment = []
+				for index, el in enumerate(x_dict_segment[y]):
+					if index not in remove_index:
+						x_segment.append(x_dict_segment[y][index])
+				x_dict_segment[y] = x_segment
+			
+			x_dict_segment[y].sort()
+			# print(len(x_dict_segment[y]), "X_DICT_:", x_dict_segment[y])
 			# print([segment.x for segment in x_segment])
-
-	# result_segments = {}
-	# coords_y = []
-	# for i in range(len(y_coords)):
-	# 	if (y_coords[i] - y_coords[1]) % size[1] == 0:
-	# 		coords_y.append(y_coords[i])
-	# 		result_segments[y_coords[i]] = x_dict_segment[y_coords[i]]
 
 	return [x_dict_segment, y_coords]
 
 def get_coords(segments, size, y_coords, y_coords_vertex):
-	coords_photo = {}
+	coords_photo = MyTransformedDict()
+	for y in y_coords:
+		coords_photo[y] = []
 	for j in range(1, len(y_coords)):
 		cur_y = y_coords[j] - size[1] / 2.
+		segment = []
 		coords_photo[cur_y] = []
 		y_ = [y_coords[j - 1], y_coords[j]]
 		coords = []
-
+		# print('Y:', cur_y)
 		for y_coord in y_coords_vertex:
 			if y_coord > y_coords[j - 1] and y_coord < y_coords[j]:
 				y_.append(y_coord)
 		for _y in y_:
+			# print(segments[_y])
 			for i in range(len(segments[_y])):
 				if i % 2 == 0:
 					coords.append([segments[_y][i].x, 0])
 				else:
 					coords.append([segments[_y][i].x, 1])
-
+				# print(segments[_y][i].x, end=' ')
+		# print()
 		coords.sort()
-		count = 0
-		result = 0
+		# print(coords)
 		c = 0
-		if j == 3:
-			print('Y:', cur_y)
-			print(coords)
+		k = -1
 		for i in range(len(coords)):
-			# if coords[i][1]:
-			# 	count += 1
-			# 	if count == 1:
-			# 		coords_photo[cur_y].append(coords[i][0])
-			# else:
-			# 	count -= 1
-			# 	if count == 0:
-			# 		coords_photo[cur_y].append(coords[i][0])
-			# 	if count < 0:
-			# 		count = 0
-			if c and i:
-				result += (coords[i][0] - coords[i - 1][0]);
-			if coords[i][1]:
+			if coords[i][1] == 0:
 				c += 1
-				if j == 3:
-					print(coords[i][0])
+				if c == 1:
+					k += 1
+					segment.append([])
+					segment[k].append(coords[i][0])
 			else:
 				if c != 0:
 					c -= 1
-		if j == 3:
-			# print(coords_photo[cur_y])
-			print(result)
+					if c == 0:
+						segment[k].append(coords[i][0])
+		# print(segment)
+		# print()
+
+		for i in range(len(segment)):
+			pointer = segment[i][0] + size[0] / 2.
+			# print(segment[i])
+			while pointer < segment[i][1]:
+				coords_photo[y_coords[j]].append(pointer)
+				pointer += size[0]
+		print('Y:', cur_y, coords_photo[y_coords[j]])
+
 	return coords_photo
+
+def cycle(polygon_input, size):
+	# radian = random.uniform(-math.pi, math.pi)
+	radian = -2.0358385126715834
+	polygon = turn_polygon(polygon_input, radian)
+	print('POLYGON:')
+	print(polygon)
+	print()
+	print('RADIAN:', radian)
+	y_coords_vertex = add_y_vertex(polygon)
+	segments, y_coords = get_segments(polygon, size)
+	coords = get_coords(segments, size, y_coords, y_coords_vertex)
+
+	return [coords, radian]
 
 def algorithm(polygon_input = [], size = []):
 	#Coords of polygon without last element(it is exactly first)
-	# polygon_input = [[-91.87083756449519, 42.76116131487211], [-91.86988936752181, 42.76069720847619],
-	# 			[-91.8687641737798, 42.76086428717932], [-91.86827111135369, 42.7612355715728],
-	# 			[-91.86947216085335, 42.76148618728021], [-91.86849867862757, 42.76210808113947],
-	# 			[-91.86975029863248, 42.761773929991506], [-91.87028761025014, 42.762108080995546],
-	# 			[-91.87131482363858, 42.76191780073228], [-91.870562587373, 42.76163469974355]]
-	# polygon_input = [[[3, 1], [2, 4], [4, 6], [5, 4], [6, 3]]]
 	polygon_input = [[[4, 1], [2, 3], [3, 6], [4, 4], [6, 8], [8, 3], [11, 5], [12, 3]]]
 	size = [2, 1]
 
+	result = []
 	# convert polygon to comfortable use
 	polygon_input = convert_polygon(polygon_input)
-	y_coords_vertex = add_y_vertex(polygon_input)
-	for i in range(1):
-		# radian = random.uniform(-math.pi, math.pi)
-		# polygon = turn_polygon(polygon_input, radian)
-		segments, y_coords = get_segments(polygon_input, size)
-		coords = get_coords(segments, size, y_coords, y_coords_vertex)
-		# print(radian)
+	result.append(cycle(polygon_input, size))
+	# for i in range(1):
+	# 	result.append(cycle(polygon_input, size, y_coords_vertex))
+
+	# print(result)
 
 algorithm()
+
+
+# POLYGON:
+# [[-2.9678771246927593, 2.862115541470232, -3.6039884580189807, 0.10614704172029166, -6.678012624432032, -0.6357258748284571, -5.511936999499881, 1.2722226666524428, -9.9639454157879, 0.8484054167668047, -6.7837742076545595, 5.194266791334535, -10.069706999010428, 6.678398082929796, -8.903631374078278, 8.586346624410696]]
