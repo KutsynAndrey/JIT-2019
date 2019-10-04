@@ -145,7 +145,7 @@ function SaveCoords() {
 
                 LatitudeDMS.value += ' ';
                 LongitudeDMS.value += ' ';
-            } else {
+            } else if(id != polygonsId.length - 1){
                 LatitudeGC.value += '$';
                 LongitudeGC.value += '$';
 

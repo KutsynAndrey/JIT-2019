@@ -205,3 +205,9 @@ def intersect_segments(a, b, c, d):
             and oriented_triangle_area(a, b, c) * oriented_triangle_area(a, b, d) <= 0
             and oriented_triangle_area(c, d, a) * oriented_triangle_area(c, d, b) <= 0)
 
+
+def size_photo(widthCamera, heightCamera, H, F):
+    width = widthCamera * H / F
+    height = heightCamera * H / F
+
+    return [width, height]

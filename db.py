@@ -309,19 +309,21 @@ def get_polygon_coords(db_session, query_id):
     polygons = db_session.query(Polygon).filter_by(query_id=query_id).all()
     coordinates_x = ''
     coordinates_y = ''
-    for polygon in polygons:
+    for i, polygon in enumerate(polygons):
         coords = db_session.query(Coord).filter_by(polygon_id=polygon.id).all()
         new_coords_x = ''
         new_coords_y = ''
         for ii, coord in enumerate(coords):
             new_coords_x += str(coord.longitude_gc)
             new_coords_y += str(coord.latitude_gc)
-            new_coords_x += ' '
-            new_coords_y += ' '
+            if ii != len(coords) - 1:
+              new_coords_x += ' '
+              new_coords_y += ' '
         coordinates_x += str(new_coords_x)
         coordinates_y += str(new_coords_y)
-        coordinates_x += '$'
-        coordinates_y += '$'
+        if i != len(polygons) - 1:
+          coordinates_x += '$'
+          coordinates_y += '$'
     return coordinates_x, coordinates_y
 
 
