@@ -25,35 +25,35 @@
                 <form class="form" method="post" enctype="multipart/form-data">
                     <div class='div'>
                         <label class="label">Фокусна відстань (м)</label><br>
-                        <input class="input" type="text" name="focal_length" required readonly>
+                        <input value="{{ obj.focal_length }}" class="input" type="text" name="focal_length" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Допустима висота польоту (м)</label><br>
-                        <input class="input" type="text" name="fly_height" required readonly>
+                        <input value="{{ obj.fly_height }}" class="input" type="text" name="fly_height" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Висота фотосенсора (мм)</label><br>
-                        <input class="input" type="text" name="ps_height" required readonly>
+                        <input value="{{ obj.ps_height }}" class="input" type="text" name="ps_height" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Ширина фотосенсора (мм)</label><br>
-                        <input class="input" type="text" name="ps_width" required readonly>
+                        <input value="{{ obj.ps_width }}" class="input" type="text" name="ps_width" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Об'єм батареї дрона (mAh)</label><br>
-                        <input class="input" type="text" name="battery_capacity" required readonly>
+                        <input value="{{ obj.battery_capacity }}" class="input" type="text" name="battery_capacity" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Витрати заряду на фото (mAh)</label><br>
-                        <input class="input" type="text" name="photo_loss" required readonly>
+                        <input value="{{ obj.photo_loss }}" class="input" type="text" name="photo_loss" required readonly>
                     </div>
                     <div class='div'>
                         <label class="label">Витрати заряду на політ (mAh)</label><br>
-                        <input class="input" type="text" name="fly_loss" required readonly>
+                        <input value="{{ obj.fly_loss }}" class="input" type="text" name="fly_loss" required readonly>
                     </div>
                     <div name='PolygonsCoords' class='coords'>
-                         <input type="text" id='latitude-GC' name='latitude-GC'>
-                         <input type="text" id='longitude-GC' name='longitude-GC'>
+                         <input value="{{ x }}" type="text" id='latitude-GC' name='latitude-GC'>
+                         <input value="{{ y }}" type="text" id='longitude-GC' name='longitude-GC'>
                          <input type="text" id='latitude-DMS' name='latitude-DMS'>
                          <input type="text" id='longitude-DMS' name='longitude-DMS'>
                     </div>
