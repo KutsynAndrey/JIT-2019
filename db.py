@@ -25,9 +25,11 @@ query_table = Table('queries', metadata,
                     Column('ps_width', Integer),
                     Column('ps_height', Integer),
                     Column('photo_loss', Integer),
+                    Column('fly_height', Integer),
                     Column('fly_loss', Integer),
                     Column('battery_capacity', Integer),
-                    Column('user_id', Integer, ForeignKey("users.id"))
+                    Column('user_id', Integer, ForeignKey("users.id")),
+                    Column('status', Integer)
                     )
 
 polygon_table = Table('polygon', metadata,
@@ -49,8 +51,6 @@ path_coordinates = Table('path_coordinates', metadata,
                          Column('id', Integer, primary_key=True),
                          Column('latitude_gc', Float),
                          Column('longitude_gc', Float),
-                         Column('latitude_dms', String(20)),
-                         Column('longitude_dms', String(20)),
                          Column('query_id', Integer, ForeignKey('queries.id'))
                          )
 
@@ -84,7 +84,7 @@ class Query(object):
         self.photo_loss = p_loss
 
     def __repr__(self):
-        return "<Query('%s', '%s')>" % (self.user_id, self.query_date)
+        return "<Query('%s', '%s')>" % (self.fly_height, self.query_date)
 
 
 class Coord(object):
@@ -112,11 +112,9 @@ class Polygon(object):
 
 class PathCoord(object):
 
-    def __init__(self, latitude_gc, longitude_gc, latitude_dms, longitude_dms, query_id):
+    def __init__(self, latitude_gc, longitude_gc, query_id):
         self.latitude_gc = latitude_gc
         self.longitude_gc = longitude_gc
-        self.latitude_dms = latitude_dms
-        self.longitude_dms = longitude_dms
         self.query_id = query_id
 
     def __repr__(self):
@@ -284,7 +282,13 @@ def get_user(db_session, nickname, password, session):
 
 
 def get_queries(db_session, session):
-    return db_session.query(Query).filter_by(user_id=session['user_id'])
+    obj = db_session.query(Query).filter_by(user_id=session['user_id']).all()
+    return obj
+
+
+def get_query(db_session, session, query_id):
+    obj = db_session.query(Query).filter_by(id=query_id).first()
+    return obj
 
 
 def same_nickname(db_session, nickname):
@@ -301,6 +305,38 @@ def get_coord(db_session, query_list):
     return coord_list
 
 
+def get_polygon_coords(db_session, query_id):
+    polygons = db_session.query(Polygon).filter_by(query_id=query_id).all()
+    coordinates_x = ''
+    coordinates_y = ''
+    for polygon in polygons:
+        coords = db_session.query(Coord).filter_by(polygon_id=polygon.id).all()
+        new_coords_x = ''
+        new_coords_y = ''
+        for ii, coord in enumerate(coords):
+            new_coords_x += str(coord.longitude_gc)
+            new_coords_y += str(coord.latitude_gc)
+            new_coords_x += ' '
+            new_coords_y += ' '
+        coordinates_x += str(new_coords_x)
+        coordinates_y += str(new_coords_y)
+        coordinates_x += '$'
+        coordinates_y += '$'
+    return coordinates_x, coordinates_y
+
+
+def set_path_coords(db_session, dot_list, query_id):
+    for dot in dot_list:
+        point = PathCoord(dot[0],
+                          dot[1],
+                          query_id
+                          )
+        db_session.add(point)
+    db_session.commit()
+
+
+def get_path_coords(db_session, query_id):
+    pass
 
 
 

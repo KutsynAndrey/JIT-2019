@@ -10,12 +10,12 @@
         <div class="container">
             <div class="user-info"> 
                 <div class="user-name">
-                    <p>Ім'я користувача</p>
+                    <p>{{ session['nickname'] }}</p>
                 </div>
             </div>
             <div class="user-info"> 
                 <div class="user-gmail">
-                    <p>Почта користувача</p>
+                    <p>{{ session['email'] }}</p>
                 </div>
             </div>
             <div class="table">
@@ -27,6 +27,14 @@
                         <td>Час</td>
                         <td>Посилання на запит</td>
                     </tr>
+                    {% for ii in range(length) %}
+                    <tr>
+                        <td>{{ ii+1 }}</td>
+                        <td>{{ queries[ii].query_date }}</td>
+                        <td></td>
+                        <td><a href="/task/{{ queries[ii].id }}">Відкрити</a></td>
+                    </tr>
+                    {% endfor %}
                 </table>
             </div>
         </div> 
