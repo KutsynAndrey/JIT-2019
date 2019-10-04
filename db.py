@@ -6,7 +6,7 @@ from validate_email import validate_email
 from functional import time_now, validation_csv, fill_session_by_valid_code, validate_polygon
 
 
-engine = create_engine("mysql+mysqlconnector://ollegg:sqlollegg@localhost/JIT", echo=True)
+engine = create_engine("mysql+mysqlconnector://user:Dgk.cf[ytn,eleotuj@localhost/JIT", echo=True)
 metadata = MetaData()
 Session = sessionmaker(bind=engine)
 
@@ -305,24 +305,39 @@ def get_coord(db_session, query_list):
     return coord_list
 
 
-def get_polygon_coords(db_session, query_id):
+def get_polygon_coords(db_session, query_id, for_algorithm=False):
     polygons = db_session.query(Polygon).filter_by(query_id=query_id).all()
-    coordinates_x = ''
-    coordinates_y = ''
-    for polygon in polygons:
-        coords = db_session.query(Coord).filter_by(polygon_id=polygon.id).all()
-        new_coords_x = ''
-        new_coords_y = ''
-        for ii, coord in enumerate(coords):
-            new_coords_x += str(coord.longitude_gc)
-            new_coords_y += str(coord.latitude_gc)
-            new_coords_x += ' '
-            new_coords_y += ' '
-        coordinates_x += str(new_coords_x)
-        coordinates_y += str(new_coords_y)
-        coordinates_x += '$'
-        coordinates_y += '$'
-    return coordinates_x, coordinates_y
+
+    if for_algorithm:
+        polygon_list = []
+        for polygon in polygons:
+            coords = db_session.query(Coord).filter_by(polygon_id=polygon.id).all()
+            dots_list = []
+            for ii, coord in enumerate(coords):
+                dot = [coord.longitude_gc, coord.latitude_gc]
+                dots_list.append(dot)
+            polygons.append(dots_list)
+
+        return polygons
+
+    else:
+        coordinates_x = ''
+        coordinates_y = ''
+        for polygon in polygons:
+
+            coords = db_session.query(Coord).filter_by(polygon_id=polygon.id).all()
+            new_coords_x = ''
+            new_coords_y = ''
+            for ii, coord in enumerate(coords):
+                new_coords_x += str(coord.longitude_gc)
+                new_coords_y += str(coord.latitude_gc)
+                new_coords_x += ' '
+                new_coords_y += ' '
+            coordinates_x += str(new_coords_x)
+            coordinates_y += str(new_coords_y)
+            coordinates_x += '$'
+            coordinates_y += '$'
+        return coordinates_x, coordinates_y
 
 
 def set_path_coords(db_session, dot_list, query_id):
