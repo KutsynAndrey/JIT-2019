@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import render_template, session, request, redirect
 from db import Session
-from db import set_coord, set_query, set_user, get_user, get_queries, get_coord, get_query, get_polygon_coords
+from db import set_query, set_user, get_user, get_queries, get_coord, get_query, get_polygon_coords, get_path_coords
 from functional import clear_errors, init_session
 
 
@@ -63,8 +63,9 @@ def logout():
 def task(task_id):
     obj = get_query(db_session, session, task_id)
     x, y = get_polygon_coords(db_session, session, task_id)
+    path_coords = get_path_coords(db_session, task_id, True)
     print(obj)
-    return render_template('task.html', session=session, obj=obj, coordinates=(x, y))
+    return render_template('task.html', session=session, obj=obj, coordinates=(x, y), path=path_coords)
 
 
 if __name__ == '__main__':

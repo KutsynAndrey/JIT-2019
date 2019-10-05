@@ -72,7 +72,7 @@ class User(object):
 
 class Query(object):
 
-    def __init__(self,  user_id, time, focal_length, w, h, fly_height, capacity, f_loss, p_loss):
+    def __init__(self,  user_id, time, focal_length, w, h, fly_height, capacity, f_loss, p_loss, status):
         self.user_id = user_id
         self.query_date = time
         self.focal_length = focal_length
@@ -82,6 +82,7 @@ class Query(object):
         self.battery_capacity = capacity
         self.fly_loss = f_loss
         self.photo_loss = p_loss
+        self.status = status
 
     def __repr__(self):
         return "<Query('%s', '%s')>" % (self.fly_height, self.query_date)
@@ -183,7 +184,8 @@ def set_query(session, params, db_session, l_files):
                           params['fly_height'],
                           params['battery_capacity'],
                           params['fly_loss'],
-                          params['photo_loss']
+                          params['photo_loss'],
+                          -1
                           )
 
             db_session.add(query)
@@ -210,7 +212,8 @@ def set_query(session, params, db_session, l_files):
                       params['fly_height'],
                       params['battery_capacity'],
                       params['fly_loss'],
-                      params['photo_loss']
+                      params['photo_loss'],
+                      -1
                       )
 
         db_session.add(query)
@@ -314,7 +317,7 @@ def get_polygon_coords(db_session, query_id, for_algorithm=False):
             coords = db_session.query(Coord).filter_by(polygon_id=polygon.id).all()
             dots_list = []
             for ii, coord in enumerate(coords):
-                dot = [coord.longitude_gc, coord.latitude_gc]
+                dot = [coord.latitude_gc, coord.longitude_gc]
                 dots_list.append(dot)
             polygons.append(dots_list)
 
@@ -329,8 +332,8 @@ def get_polygon_coords(db_session, query_id, for_algorithm=False):
             new_coords_x = ''
             new_coords_y = ''
             for ii, coord in enumerate(coords):
-                new_coords_x += str(coord.longitude_gc)
-                new_coords_y += str(coord.latitude_gc)
+                new_coords_x += str(coord.latitude_gc)
+                new_coords_y += str(coord.longitude_gc)
                 new_coords_x += ' '
                 new_coords_y += ' '
             coordinates_x += str(new_coords_x)
@@ -350,8 +353,19 @@ def set_path_coords(db_session, dot_list, query_id):
     db_session.commit()
 
 
-def get_path_coords(db_session, query_id):
-    pass
+def get_path_coords(db_session, query_id, like_str=False):
+    dots = db_session.query(PathCoord).filter_by(query_id=query_id).all()
+
+    if like_str:
+        lat = ''
+        lon = ''
+        for dot in dots:
+            lat += str(dot.latitude_gc)
+            lon += str(dot.longitude_gc)
+        return lat, lon
+
+    return dots
+
 
 
 
