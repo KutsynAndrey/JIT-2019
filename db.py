@@ -21,7 +21,7 @@ user_table = Table('users', metadata,
 query_table = Table('queries', metadata,
                     Column('id', Integer, primary_key=True),
                     Column('query_date', DateTime),
-                    Column('focal_length', Integer),
+                    Column('focal_length', Float),
                     Column('ps_width', Integer),
                     Column('ps_height', Integer),
                     Column('photo_loss', Integer),
@@ -29,7 +29,9 @@ query_table = Table('queries', metadata,
                     Column('fly_loss', Integer),
                     Column('battery_capacity', Integer),
                     Column('user_id', Integer, ForeignKey("users.id")),
-                    Column('status', Integer)
+                    Column('status', Integer),
+                    Column('start_lat', Float),
+                    Column('start_lon', Float)
                     )
 
 polygon_table = Table('polygon', metadata,
@@ -72,7 +74,7 @@ class User(object):
 
 class Query(object):
 
-    def __init__(self,  user_id, time, focal_length, w, h, fly_height, capacity, f_loss, p_loss, status):
+    def __init__(self,  user_id, time, focal_length, w, h, fly_height, capacity, f_loss, p_loss, status, s_lat, s_lon):
         self.user_id = user_id
         self.query_date = time
         self.focal_length = focal_length
@@ -83,6 +85,8 @@ class Query(object):
         self.fly_loss = f_loss
         self.photo_loss = p_loss
         self.status = status
+        self.start_lon = s_lon
+        self.start_lat = s_lat
 
     def __repr__(self):
         return "<Query('%s', '%s')>" % (self.fly_height, self.query_date)
@@ -152,7 +156,10 @@ def set_user(params, db_session, session):
 def set_query(session, params, db_session, l_files):
     print("file", l_files['myCSV'].content_type)
     file = l_files['myCSV']
-    if params['latitude-GC'] == '' and file.content_type == 'application/octet-stream':
+    if params['lat-dot'] == '':
+        session["start-point-doesn't-exist"] = True
+        return -1
+    elif params['latitude-GC'] == '' and file.content_type == 'application/octet-stream':
         print("WoW")
         session["polygon-doesn't-exist"] = True
         return -1
@@ -185,7 +192,9 @@ def set_query(session, params, db_session, l_files):
                           params['battery_capacity'],
                           params['fly_loss'],
                           params['photo_loss'],
-                          -1
+                          -1,
+                          params['lat-dot'],
+                          params['lon-dot']
                           )
 
             db_session.add(query)
@@ -213,7 +222,9 @@ def set_query(session, params, db_session, l_files):
                       params['battery_capacity'],
                       params['fly_loss'],
                       params['photo_loss'],
-                      -1
+                      -1,
+                      params['lat-dot'],
+                      params['lon-dot']
                       )
 
         db_session.add(query)
