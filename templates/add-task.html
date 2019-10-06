@@ -48,7 +48,7 @@
                         <input class="input" type="text" name="photo_loss" placeholder="Наприклад, 10" required>
                     </div>
                     <div class='div'>
-                        <label class="label">Витрати заряду на політ (mAh)</label><br>
+                        <label class="label">Витрати заряду на політ (mAh/метр)</label><br>
                         <input class="input" type="text" name="fly_loss" placeholder="Наприклад, 1000" required>
                     </div>
                     <div></div>
@@ -57,11 +57,12 @@
                     </div>
                     <input type="file" name="myCSV">
                     <div name='PolygonsCoords' class='coords'>
-                        <input type="text" id='latitude-GC' name='latitude-GC'>
-                        <input type="text" id='longitude-GC' name='longitude-GC'>
-                        <input type="text" id='latitude-DMS' name='latitude-DMS'>
-                        <input type="text" id='longitude-DMS' name='longitude-DMS'>
-                        <input type="text" id='start-point' name='start-point'>
+                         <input type="text" id='latitude-GC' name='latitude-GC'>
+                         <input type="text" id='longitude-GC' name='longitude-GC'>
+                         <input type="text" id='latitude-DMS' name='latitude-DMS'>
+                         <input type="text" id='longitude-DMS' name='longitude-DMS'>
+                         <input type="text" id="lat-dot" name="lat-dot">
+                         <input type="text" id="lon-dot" name="lon-dot">
                     </div>
 
                 </form>
@@ -104,6 +105,8 @@
                 alert("Полигон номер {{ session['polygon_has_less_than_3_dots'][1] }} имеет меньше чем 4 точки");
             {% elif session['polygon_has_self-intersection'][0]  %}
                 alert("Полигон номер {{ session['polygon_has_self-intersection'][1] }} имеет самопересечение");
+            {% elif session["start-point-doesn't-exist"]  %}
+                alert("Стартовая точка не выбрана");
             {% endif %}
         </script>
 	</body>

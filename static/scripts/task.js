@@ -29,7 +29,7 @@ function ShowPolygon() {
     for(let i = 0; i < polygons_longitude.length; i++) {
     	polygons.push([]);
     	for(let j = 0; j < polygons_longitude[i].length; j++) {
-    		polygons[i].push([parseFloat(polygons_longitude[i][j]), parseFloat(polygons_latitude[i][j])])
+    		polygons[i].push([parseFloat(polygons_latitude[i][j]), parseFloat(polygons_longitude[i][j])])
     	}
     }
 

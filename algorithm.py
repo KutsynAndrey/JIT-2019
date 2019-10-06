@@ -98,6 +98,18 @@ def turn_dot(point, radian):
 
 	return point
 
+def valid_route(path, fly_loss, photo_loss):
+	ans = 0
+	for i in range(1, len(path)):
+		x1 = path[i - 1][0]
+		y1 = path[i - 1][1]
+		x2 = path[i][0]
+		y2 = path[i][1]
+		ans += math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
+	ans = ans * fly_loss + len(path) * photo_loss
+
+	return battery > ans
+
 def get_segments(polygon, size):
 	# add all y coords
 	y_coords, y_steps = add_y_coords(size, polygon)
@@ -215,7 +227,7 @@ def cycle(polygon_input, size, radian):
 
 	return [coords, radian]
 
-def algorithm(polygon_input = [], size = [], start = []):
+def algorithm(polygon_input = [], size = [], start = [], fly_loss = 0, photo_loss = 0, battery = 1):
 	#Coords of polygon without last element(it is exactly first)
 	# polygon_input = [[[4, 1], [2, 3], [3, 6], [4, 4], [6, 8], [8, 3], [11, 5], [12, 3]]]
 	print(polygon_input)
@@ -243,11 +255,13 @@ def algorithm(polygon_input = [], size = [], start = []):
 	path = convert_path(path)
 	path[0:0] = [start]
 	path.append(start)
+	valid = valid_route(path, fly_loss, photo_loss)
+	if valid
+		print()
+		print('RADIAN:', radian)
+		print(path)
 
-	print()
-	print('RADIAN:', radian)
-	print(path)
-
-	return path
+		return [1, path]
+	return [0, []]
 
 # algorithm()
