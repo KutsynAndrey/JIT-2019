@@ -7,7 +7,7 @@ from functional import time_now, validation_csv, fill_session_by_valid_code, val
 from algorithm import algorithm
 
 
-engine = create_engine("mysql+mysqlconnector://ollegg:sqlollegg@localhost/JIT", echo=True)
+engine = create_engine("mysql+mysqlconnector://user:Dgk.cf[ytn,eleotuj@localhost/JIT", echo=True)
 metadata = MetaData()
 Session = sessionmaker(bind=engine)
 
@@ -211,24 +211,25 @@ def set_query(session, params, db_session, l_files):
                 else:
                     set_polygon(db_session, 0, query_id, pol_coordinates, True)
 
-            size = size_photo(int(params['ps_width']),
-                            int(params['ps_height']), 
-                            int(params['focal_length']),
-                            int(params['fly_height']))
+            size = size_photo(float(params['ps_width']),
+                              float(params['ps_height']),
+                              float(params['focal_length']),
+                              float(params['fly_height']))
+
             polygons = get_polygon_coords(db_session, query_id, 1)
-            start_point = [int(params['lat-dot']), int(params['lon-dot'])]
+            start_point = [float(params['lat-dot']), float(params['lon-dot'])]
             valid, path = algorithm(polygons,
-                            size,
-                            start_point,
-                            int(params['fly_loss']),
-                            int(params['photo_loss']),
-                            int(params['battery_capacity']))
-            # ToDo
+                                    size,
+                                    start_point,
+                                    float(params['fly_loss']),
+                                    float(params['photo_loss']),
+                                    float(params['battery_capacity']))
+
             if valid:
-                # status - done
+                query_table.update().values(status=0).where(query_table.c.id == query_id)
                 set_path_coords(db_session, path, query_id)
-            # else:
-                # status - not done
+            else:
+                query_table.update().values(status=1).where(query_table.c.id == query_id)
 
     else:
         print(time_now(str(datetime.now())))
@@ -264,24 +265,25 @@ def set_query(session, params, db_session, l_files):
             else:
                 set_polygon(db_session, 0, query_id, pol_coordinates)
 
-        size = size_photo(int(params['ps_width']),
-                            int(params['ps_height']), 
-                            int(params['focal_length']),
-                            int(params['fly_height']))
+        size = size_photo(float(params['ps_width']),
+                          float(params['ps_height']),
+                          float(params['focal_length']),
+                          float(params['fly_height']))
+
         polygons = get_polygon_coords(db_session, query_id, 1)
-        start_point = [int(params['lat-dot']), int(params['lon-dot'])]
+        start_point = [float(params['lat-dot']), float(params['lon-dot'])]
         valid, path = algorithm(polygons,
-                        size,
-                        start_point,
-                        int(params['fly_loss']),
-                        int(params['photo_loss']),
-                        int(params['battery_capacity']))
-        # ToDo
+                                size,
+                                start_point,
+                                float(params['fly_loss']),
+                                float(params['photo_loss']),
+                                float(params['battery_capacity']))
+
         if valid:
-            # status - done
+            query_table.update().values(status=0).where(query_table.c.id == query_id)
             set_path_coords(db_session, path, query_id)
-        # else:
-            # status - not done
+        else:
+            query_table.update().values(status=1).where(query_table.c.id == query_id)
 
 
 def set_polygon(db_session, polygon_type, query_id, coordinates, from_csv=False):
