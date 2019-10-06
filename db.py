@@ -3,10 +3,11 @@ from sqlalchemy import Text, Boolean, DateTime, ForeignKey
 from sqlalchemy.orm import mapper, sessionmaker
 from datetime import datetime
 from validate_email import validate_email
-from functional import time_now, validation_csv, fill_session_by_valid_code, validate_polygon
+from functional import time_now, validation_csv, fill_session_by_valid_code, validate_polygon, size_photo
+from algorithm import algorithm
 
 
-engine = create_engine("mysql+mysqlconnector://user:Dgk.cf[ytn,eleotuj@localhost/JIT", echo=True)
+engine = create_engine("mysql+mysqlconnector://ollegg:sqlollegg@localhost/JIT", echo=True)
 metadata = MetaData()
 Session = sessionmaker(bind=engine)
 
@@ -210,6 +211,25 @@ def set_query(session, params, db_session, l_files):
                 else:
                     set_polygon(db_session, 0, query_id, pol_coordinates, True)
 
+            size = size_photo(int(params['ps_width']),
+                            int(params['ps_height']), 
+                            int(params['focal_length']),
+                            int(params['fly_height']))
+            polygons = get_polygon_coords(db_session, query_id, 1)
+            start_point = [int(params['lat-dot']), int(params['lon-dot'])]
+            valid, path = algorithm(polygons,
+                            size,
+                            start_point,
+                            int(params['fly_loss']),
+                            int(params['photo_loss']),
+                            int(params['battery_capacity']))
+            # ToDo
+            if valid:
+                # status - done
+                set_path_coords(db_session, path, query_id)
+            # else:
+                # status - not done
+
     else:
         print(time_now(str(datetime.now())))
 
@@ -243,6 +263,25 @@ def set_query(session, params, db_session, l_files):
                 set_polygon(db_session, 1, query_id, pol_coordinates)
             else:
                 set_polygon(db_session, 0, query_id, pol_coordinates)
+
+        size = size_photo(int(params['ps_width']),
+                            int(params['ps_height']), 
+                            int(params['focal_length']),
+                            int(params['fly_height']))
+        polygons = get_polygon_coords(db_session, query_id, 1)
+        start_point = [int(params['lat-dot']), int(params['lon-dot'])]
+        valid, path = algorithm(polygons,
+                        size,
+                        start_point,
+                        int(params['fly_loss']),
+                        int(params['photo_loss']),
+                        int(params['battery_capacity']))
+        # ToDo
+        if valid:
+            # status - done
+            set_path_coords(db_session, path, query_id)
+        # else:
+            # status - not done
 
 
 def set_polygon(db_session, polygon_type, query_id, coordinates, from_csv=False):
@@ -321,23 +360,24 @@ def get_coord(db_session, query_list):
 
 def get_polygon_coords(db_session, query_id, for_algorithm=False):
     polygons = db_session.query(Polygon).filter_by(query_id=query_id).all()
-
     if for_algorithm:
-        polygon_list = []
-        for polygon in polygons:
+        polygons_list = []
+        for i, polygon in enumerate(polygons):
+            polygon = polygons[i]
             coords = db_session.query(Coord).filter_by(polygon_id=polygon.id).all()
             dots_list = []
             for ii, coord in enumerate(coords):
                 dot = [coord.latitude_gc, coord.longitude_gc]
                 dots_list.append(dot)
-            polygons.append(dots_list)
+            del dots_list[-1]
+            polygons_list.append(dots_list)
 
-        return polygons
+        return polygons_list
 
     else:
         coordinates_x = ''
         coordinates_y = ''
-        for polygon in polygons:
+        for i, polygon in enumerate(polygons):
 
             coords = db_session.query(Coord).filter_by(polygon_id=polygon.id).all()
             new_coords_x = ''
@@ -345,19 +385,22 @@ def get_polygon_coords(db_session, query_id, for_algorithm=False):
             for ii, coord in enumerate(coords):
                 new_coords_x += str(coord.latitude_gc)
                 new_coords_y += str(coord.longitude_gc)
-                new_coords_x += ' '
-                new_coords_y += ' '
+                if ii != len(coords) - 1:
+                  new_coords_x += ' '
+                  new_coords_y += ' '
             coordinates_x += str(new_coords_x)
             coordinates_y += str(new_coords_y)
-            coordinates_x += '$'
-            coordinates_y += '$'
+            if i != len(polygons) - 1:
+              coordinates_x += '$'
+              coordinates_y += '$'
         return coordinates_x, coordinates_y
 
 
 def set_path_coords(db_session, dot_list, query_id):
-    for dot in dot_list:
-        point = PathCoord(dot[0],
-                          dot[1],
+    print('DOT_LIST:', dot_list)
+    for i in range(len(dot_list)):
+        point = PathCoord(dot_list[i][0],
+                          dot_list[i][1],
                           query_id
                           )
         db_session.add(point)
@@ -376,11 +419,5 @@ def get_path_coords(db_session, query_id, like_str=False):
         return lat, lon
 
     return dots
-
-
-
-
-
-
 
 

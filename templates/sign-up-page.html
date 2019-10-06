@@ -12,27 +12,27 @@
       <h1 class="main-text">Реєстрація</h1>
       <br>
       <label><big class="main-text">Нікнейм</big></label>
-      <input type="text" class="sign-up-page-info input" name="nick" placeholder="Введите ник" required>
+      <input type="text" class="sign-up-page-info input" name="nick" placeholder="Введіть нік" required>
       <br><br>
       <label><big class="main-text">Почта</big></label>
-      <input type="text" class="sign-up-page-info input" name="email" placeholder="Адрес электронной почты" required>
+      <input type="text" class="sign-up-page-info input" name="email" placeholder="Адреса електронної пошти" required>
       <br><br>
       <label><big class="main-text">Пароль</big></label>
       <input type="password" class="sign-up-page-info input" name="pass" placeholder="Пароль" minlength="8" required>
       <br><br>
       <label><big class="main-text">Знову пароль</big></label>
-      <input type="password" class="sign-up-page-info input" name="checkpass" minlength="8" placeholder="Для убедительности" required>
+      <input type="password" class="sign-up-page-info input" name="checkpass" minlength="8" placeholder="Введіть пароль ще раз" required>
       <br><br>
       <button class="button" type="submit">Відправити</button>
     </form>
     </div>
     <script>
             {% if session['password_match_error'] %}
-                alert("Пароли не збігаються")
+                alert("Паролі не збігаються")
             {% elif session['identiсal_nick_error'] %}
                 alert("Цей нікнейм занят")
             {% elif not session['valid_email'] %}
-                alert("Не вірна почта")
+                alert("Невірна почта")
             {% endif %}
     </script>
   </body>

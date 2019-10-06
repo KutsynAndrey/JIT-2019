@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<meta charset='utf-8' />
-		<title>Додати завдання</title>
+		<title>Завдання номер {{ obj.id }}</title>
         {% include 'header.html' %}
 		<meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
 		<script src='https://api.tiles.mapbox.com/mapbox-gl-js/v1.3.1/mapbox-gl.js'></script>
@@ -24,7 +24,7 @@
             <div class="input-box">
                 <form class="form" method="post" enctype="multipart/form-data">
                     <div class='div'>
-                        <label class="label">Фокусна відстань (м)</label><br>
+                        <label class="label">Фокусна відстань (мм)</label><br>
                         <input value="{{ obj.focal_length }}" class="input" type="text" name="focal_length" required readonly>
                     </div>
                     <div class='div'>
@@ -48,7 +48,7 @@
                         <input value="{{ obj.photo_loss }}" class="input" type="text" name="photo_loss" required readonly>
                     </div>
                     <div class='div'>
-                        <label class="label">Витрати заряду на політ (mAh)</label><br>
+                        <label class="label">Витрати заряду на політ (mAh/метр)</label><br>
                         <input value="{{ obj.fly_loss }}" class="input" type="text" name="fly_loss" required readonly>
                     </div>
                     <div name='PolygonsCoords' class='coords'>
@@ -63,10 +63,5 @@
         
         <!--map-->
 		<script src="../static/scripts/task.js"></script>
-        <script>
-            {% if session["polygon doesn't exist"] %}
-                alert("Полигон не выбран");
-            {% endif %}
-        </script>
 	</body>
 </html>

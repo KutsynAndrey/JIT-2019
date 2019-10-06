@@ -2,7 +2,7 @@ import collections.abc
 
 def equality(a, b):
 	if (a > 0 and b > 0) or (a < 0 and b < 0):
-		return abs(abs(a) - abs(b)) < 10 ** (-8)
+		return abs(abs(a) - abs(b)) < 10 ** (-4)
 	return 0
 
 class Point():
@@ -18,6 +18,9 @@ class Vertex():
 		self.polygon = polygon
 		self.number = number
 		self.x = x
+
+	def __repr__(self):
+		return "{} ".format(self.number)
 
 class Vector():
 	def __init__(self, point_start, point_end):
@@ -64,9 +67,27 @@ class TransformedDict(collections.abc.MutableMapping):
     def __len__(self):
         return len(self.store)
 
+    def __lt__(self, other):
+    	return len(self.store) < len(other.store)
+
     def __keytransform__(self, key):
         return key
 
 class MyTransformedDict(TransformedDict):
     def __keytransform__(self, key):
-        return round(key, 5)
+        return round(key, 2)
+
+    def __repr__(self):
+    	return "{}".format(self.store)
+
+    def get_path(self, start):
+    	segments = self.store
+    	path = []
+    	for index, y in enumerate(segments.keys()):
+    		coords = segments[y]
+    		# print(coords)
+    		if index % 2:
+    			coords.reverse()
+    		for point in coords:
+    			path.append([point, y])
+    	return path

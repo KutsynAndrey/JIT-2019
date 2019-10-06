@@ -24,8 +24,8 @@
             <div class="input-box">
                 <form class="form" method="post" enctype="multipart/form-data">
                     <div class='div'>
-                        <label class="label">Фокусна відстань (м)</label><br>
-                        <input class="input" type="text" name="focal_length" placeholder="Наприклад, 0.01" required>
+                        <label class="label">Фокусна відстань (мм)</label><br>
+                        <input class="input" type="text" name="focal_length" placeholder="Наприклад, 30" required>
                     </div>
                     <div class='div'>
                         <label class="label">Допустима висота польоту (м)</label><br>
@@ -48,13 +48,12 @@
                         <input class="input" type="text" name="photo_loss" placeholder="Наприклад, 10" required>
                     </div>
                     <div class='div'>
-                        <label class="label">Витрати заряду на політ (mAh)</label><br>
+                        <label class="label">Витрати заряду на політ (mAh/метр)</label><br>
                         <input class="input" type="text" name="fly_loss" placeholder="Наприклад, 1000" required>
                     </div>
                     <div></div>
                     <div class='div'>
                         <button class="button" type="submit" id='submit'>Відправити</button>
-                        <button class="button" type="reset">Скинути</button>
                     </div>
                     <input type="file" name="myCSV">
                     <div name='PolygonsCoords' class='coords'>
