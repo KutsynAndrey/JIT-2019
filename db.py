@@ -86,8 +86,8 @@ class Query(object):
         self.fly_loss = f_loss
         self.photo_loss = p_loss
         self.status = status
-        self.start_lon = s_lon
         self.start_lat = s_lat
+        self.start_lon = s_lon
 
     def __repr__(self):
         return "<Query('%s', '%s')>" % (self.fly_height, self.query_date)
@@ -211,18 +211,18 @@ def set_query(session, params, db_session, l_files):
                 else:
                     set_polygon(db_session, 0, query_id, pol_coordinates, True)
 
-            size = size_photo(int(params['ps_width']),
-                            int(params['ps_height']), 
-                            int(params['focal_length']),
-                            int(params['fly_height']))
+            size = size_photo(params['ps_width'],
+                            params['ps_height'], 
+                            params['focal_length'],
+                            params['fly_height'])
             polygons = get_polygon_coords(db_session, query_id, 1)
-            start_point = [int(params['lat-dot']), int(params['lon-dot'])]
+            start_point = [params['lat-dot'], params['lon-dot']]
             valid, path = algorithm(polygons,
                             size,
                             start_point,
-                            int(params['fly_loss']),
-                            int(params['photo_loss']),
-                            int(params['battery_capacity']))
+                            params['fly_loss'],
+                            params['photo_loss'],
+                            params['battery_capacity'])
             # ToDo
             if valid:
                 # status - done
@@ -264,18 +264,18 @@ def set_query(session, params, db_session, l_files):
             else:
                 set_polygon(db_session, 0, query_id, pol_coordinates)
 
-        size = size_photo(int(params['ps_width']),
-                            int(params['ps_height']), 
-                            int(params['focal_length']),
-                            int(params['fly_height']))
+        size = size_photo(params['ps_width'],
+                            params['ps_height'], 
+                            params['focal_length'],
+                            params['fly_height'])
         polygons = get_polygon_coords(db_session, query_id, 1)
-        start_point = [int(params['lat-dot']), int(params['lon-dot'])]
+        start_point = [params['lat-dot'], params['lon-dot']]
         valid, path = algorithm(polygons,
                         size,
                         start_point,
-                        int(params['fly_loss']),
-                        int(params['photo_loss']),
-                        int(params['battery_capacity']))
+                        params['fly_loss'],
+                        params['photo_loss'],
+                        params['battery_capacity'])
         # ToDo
         if valid:
             # status - done

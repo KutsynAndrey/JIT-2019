@@ -98,7 +98,7 @@ def turn_dot(point, radian):
 
 	return point
 
-def valid_route(path, fly_loss, photo_loss):
+def valid_route(path, fly_loss, photo_loss,battery):
 	ans = 0
 	for i in range(1, len(path)):
 		x1 = path[i - 1][0]
@@ -115,8 +115,6 @@ def get_segments(polygon, size):
 	y_coords, y_steps = add_y_coords(size, polygon)
 	# remove equal value
 	y_coords = remove_elements(y_coords)
-	# print('Y_COORDS:', y_coords)
-	# print()
 
 	# create dict
 	# y_dict_vertex = these are x_coords of vertex in each y_coords
@@ -127,7 +125,6 @@ def get_segments(polygon, size):
 	y_dict_vertex = add_vertex(y_dict_vertex, x_dict_segment, y_coords, polygon)
 
 	for iterator, y in enumerate(y_coords):
-		# print('Y=', y)
 		if iterator == 0:
 			# add new edges from the first vertex
 			for vertex in y_dict_vertex[y]:
@@ -141,7 +138,6 @@ def get_segments(polygon, size):
 			# do step on the each edge
 			for index, segment in enumerate(x_dict_segment[y]):
 				x_dict_segment[y][index].x = segment.edge.x0 + segment.edge.vector.x * ((y - segment.edge.y0) / segment.edge.vector.y)
-				# print(x_dict_segment[y][index])
 			# delete edge if it him end and create new new from to other vertex
 			for vertex in y_dict_vertex[y]:
 				remove_index = []
@@ -220,9 +216,7 @@ def get_coords(segments, size, y_coords, y_coords_vertex):
 def cycle(polygon_input, size, radian):
 	polygon = turn_polygon(polygon_input, radian)
 	y_coords_vertex = add_y_vertex(polygon)
-	print(1)
 	segments, y_steps = get_segments(polygon, size)
-	print(2)
 	coords = get_coords(segments, size, y_steps, y_coords_vertex)
 
 	return [coords, radian]
@@ -230,24 +224,28 @@ def cycle(polygon_input, size, radian):
 def algorithm(polygon_input = [], size = [], start = [], fly_loss = 0, photo_loss = 0, battery = 1):
 	#Coords of polygon without last element(it is exactly first)
 	# polygon_input = [[[4, 1], [2, 3], [3, 6], [4, 4], [6, 8], [8, 3], [11, 5], [12, 3]]]
-	print(polygon_input)
+	polygon_input = [[[42.7804, -91.8737], [42.7545, -91.891], [42.7547, -91.8285]]]
+	# print(polygon_input)
 	start = polygon_input[0][0]
-	print('START:', start)
+	size = [500, 300]
 
 	result = []
 	# convert polygon to comfortable use
 	polygon_input = convert_polygon(polygon_input, 0)
 	radian = 0
 	result.append(cycle(polygon_input, size, radian))
-	# for i in range(1):
-	# 	radian = random.uniform(-math.pi, math.pi)
-	# 	result.append(cycle(polygon_input, size, radian))
+	for i in range(100):
+		radian = random.uniform(-math.pi, math.pi)
+		result.append(cycle(polygon_input, size, radian))
 
+	for i in range(len(result)):
+		segments, radian = result[i][0], result[i][1]
+		path = segments.get_path(start)	
+		result[i][0] = len(path)
+		result[i].append(path)
 	result.sort()
-	segments, radian = result[0][0], result[0][1]
-	path = segments.get_path(start)
-	print()
-	print(path)
+
+	l, radian, path = result[0][0], result[0][1], result[0][2]
 
 	for i in range(len(path)):
 		path[i] = turn_dot(path[i], -radian)
@@ -255,13 +253,13 @@ def algorithm(polygon_input = [], size = [], start = [], fly_loss = 0, photo_los
 	path = convert_path(path)
 	path[0:0] = [start]
 	path.append(start)
-	valid = valid_route(path, fly_loss, photo_loss)
-	if valid
-		print()
-		print('RADIAN:', radian)
-		print(path)
+	valid = valid_route(path, fly_loss, photo_loss, battery)
+	print()
+	if valid:
+		print('RADIAN:', radian, "LEN:", len(path))
+		# print(path)
 
-		return [1, path]
-	return [0, []]
+		# return [1, path]
+	# return [0, []]
 
-# algorithm()
+algorithm()

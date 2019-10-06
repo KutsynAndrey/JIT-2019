@@ -61,7 +61,6 @@ class TransformedDict(collections.abc.MutableMapping):
         del self.store[self.__keytransform__(key)]
 
     def __iter__(self):
-        print(self.store)
         return iter(self.store)
 
     def __len__(self):
@@ -85,7 +84,6 @@ class MyTransformedDict(TransformedDict):
     	path = []
     	for index, y in enumerate(segments.keys()):
     		coords = segments[y]
-    		# print(coords)
     		if index % 2:
     			coords.reverse()
     		for point in coords:
