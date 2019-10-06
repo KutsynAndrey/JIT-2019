@@ -69,9 +69,9 @@ function onDragEnd() {
 
 function SaveMarkerCoordinates(coords) {
     let StartLat = document.getElementById('lat-dot'),
-        StartLong = document.getElementById('long-dot');
+        StartLong = document.getElementById('lon-dot');
     StartLat.value = String(coords.lat);
-    StartPont.value = String(coords.lng);
+    StartLong.value = String(coords.lng);
     console.log("StartPoint:", StartLat.value, StartLong.value);
     console.log(coords);
 }
