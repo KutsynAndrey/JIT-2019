@@ -56,6 +56,24 @@ map.on('draw.update', GetCoords);
 map.addControl(new mapboxgl.NavigationControl());
 map.addControl(draw);
 
+var marker = new mapboxgl.Marker({
+    draggable: true
+});
+
+marker.on('dragend', onDragEnd);
+ 
+function onDragEnd() {
+    let lngLat = marker.getLngLat();
+    SaveMarkerCoordinates(lngLat);
+}
+
+function SaveMarkerCoordinates(coords) {
+    let StartPont = document.getElementById('start-point');
+    StartPont.value = String(coords.lat) + ' ' + String(coords.lng);
+    console.log("StartPont:", StartPont.value);
+    console.log(coords);
+}
+
 function GetCoords(e) {
     let data = draw.getAll(),
         features = data.features;
@@ -73,7 +91,13 @@ function GetCoords(e) {
     }
     console.log(polygonsGC);
     console.log(polygonsDMS);
-
+    if(polygonsId.length != 0) {
+        let polygon = polygonsGC[polygonsId[0]];
+        marker.setLngLat(polygon[0]).addTo(map);
+        onDragEnd();
+    } else {
+        marker.remove();
+    }
     SaveCoords();
 }
 

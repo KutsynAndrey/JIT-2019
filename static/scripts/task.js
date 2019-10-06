@@ -33,12 +33,6 @@ function ShowPolygon() {
     	}
     }
 
-    // path_latitude = path_latitude.split(' '), path_longitude = path_longitude.split(' ');
-    // let path = [];
-    // for(let i = 0; i < path_latitude.length; i++) {
-    // 	path.push([path_latitude[i], path_longitude[i]]);
-    // }
-
     console.log(polygons);
 
 	ChangeParameters(polygons[0]);
@@ -59,11 +53,19 @@ function ShowPolygon() {
 			},
 			'layout': {},
 			'paint': {
-				// 'fill-color': color,
-				// 'fill-opacity': opacity
+				'fill-color': color,
+				'fill-opacity': opacity
 			}
 		});
 	}
+
+	// path_latitude = path_latitude.split(' '), path_longitude = path_longitude.split(' ');
+    // let path = [];
+    // for(let i = 0; i < path_latitude.length; i++) {
+    // 	path.push([path_latitude[i], path_longitude[i]]);
+    // }
+
+    
 }
 
 function DrawPolygon(polygon) {

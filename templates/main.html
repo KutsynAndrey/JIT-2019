@@ -7,7 +7,7 @@
    <body>
         {% include 'nav.html' %}
         <div class="main-part">
-            <a href="{% if not session['is_logged'] %} /sign-up-page {% endif %} {% if session['is_logged'] %} /new-polygon {% endif %}" class="btn"><p class="text-c">Начать работу</p></a>
+            <a href="{% if not session['is_logged'] %} /sign-up-page {% endif %} {% if session['is_logged'] %} /new-polygon {% endif %}" class="btn"><p class="text-c">Розпочати роботу</p></a>
         </div>
    </body>
 </html>

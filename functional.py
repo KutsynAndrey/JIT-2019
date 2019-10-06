@@ -207,7 +207,8 @@ def intersect_segments(a, b, c, d):
 
 
 def size_photo(widthCamera, heightCamera, H, F):
-    width = widthCamera * H / F
-    height = heightCamera * H / F
+    print(widthCamera, heightCamera, H, F)
+    width = widthCamera * (H / (F / 1000))
+    height = heightCamera * (H / (F / 1000))
 
     return [width, height]

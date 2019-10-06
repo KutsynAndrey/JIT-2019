@@ -82,7 +82,7 @@ class MyTransformedDict(TransformedDict):
 
     def get_path(self, start):
     	segments = self.store
-    	path = [start]
+    	path = []
     	for index, y in enumerate(segments.keys()):
     		coords = segments[y]
     		# print(coords)
@@ -90,5 +90,4 @@ class MyTransformedDict(TransformedDict):
     			coords.reverse()
     		for point in coords:
     			path.append([point, y])
-    	path.append(start)
     	return path

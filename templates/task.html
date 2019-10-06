@@ -24,7 +24,7 @@
             <div class="input-box">
                 <form class="form" method="post" enctype="multipart/form-data">
                     <div class='div'>
-                        <label class="label">Фокусна відстань (м)</label><br>
+                        <label class="label">Фокусна відстань (мм)</label><br>
                         <input value="{{ obj.focal_length }}" class="input" type="text" name="focal_length" required readonly>
                     </div>
                     <div class='div'>
@@ -63,10 +63,5 @@
         
         <!--map-->
 		<script src="../static/scripts/task.js"></script>
-        <script>
-            {% if session["polygon doesn't exist"] %}
-                alert("Полигон не выбран");
-            {% endif %}
-        </script>
 	</body>
 </html>
