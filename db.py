@@ -226,10 +226,15 @@ def set_query(session, params, db_session, l_files):
                                     float(params['battery_capacity']))
 
             if valid:
-                query_table.update().values(status=0).where(query_table.c.id == query_id)
+                print("VALID", query_id)
+                tmp_query = db_session.query(Query).filter_by(id=query_id).first()
+                tmp_query.status = 0
+                db_session.commit()
                 set_path_coords(db_session, path, query_id)
             else:
-                query_table.update().values(status=1).where(query_table.c.id == query_id)
+                tmp_query = db_session.query(Query).filter_by(id=query_id).first()
+                tmp_query.status = 1
+                db_session.commit()
 
     else:
         print(time_now(str(datetime.now())))
@@ -280,10 +285,15 @@ def set_query(session, params, db_session, l_files):
                                 float(params['battery_capacity']))
 
         if valid:
-            query_table.update().values(status=0).where(query_table.c.id == query_id)
+            print("VALID", query_id)
+            tmp_query = db_session.query(Query).filter_by(id=query_id).first()
+            tmp_query.status = 0
+            db_session.commit()
             set_path_coords(db_session, path, query_id)
         else:
-            query_table.update().values(status=1).where(query_table.c.id == query_id)
+            tmp_query = db_session.query(Query).filter_by(id=query_id).first()
+            tmp_query.status = 1
+            db_session.commit()
 
 
 def set_polygon(db_session, polygon_type, query_id, coordinates, from_csv=False):
@@ -401,8 +411,8 @@ def get_polygon_coords(db_session, query_id, for_algorithm=False):
 def set_path_coords(db_session, dot_list, query_id):
     print('DOT_LIST:', dot_list)
     for i in range(len(dot_list)):
-        point = PathCoord(dot_list[i][0],
-                          dot_list[i][1],
+        point = PathCoord(str(dot_list[i][0]),
+                          str(dot_list[i][1]),
                           query_id
                           )
         db_session.add(point)
