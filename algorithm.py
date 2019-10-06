@@ -98,7 +98,7 @@ def turn_dot(point, radian):
 
 	return point
 
-def valid_route(path, fly_loss, photo_loss,battery):
+def valid_route(path, fly_loss, photo_loss, battery):
 	ans = 0
 	for i in range(1, len(path)):
 		x1 = path[i - 1][0]
@@ -254,12 +254,12 @@ def algorithm(polygon_input = [], size = [], start = [], fly_loss = 0, photo_los
 	path[0:0] = [start]
 	path.append(start)
 	valid = valid_route(path, fly_loss, photo_loss, battery)
-	print()
+	# print()
 	if valid:
 		print('RADIAN:', radian, "LEN:", len(path))
 		# print(path)
 
-		# return [1, path]
-	# return [0, []]
+		return [1, path]
+	return [0, []]
 
 algorithm()

@@ -211,24 +211,24 @@ def set_query(session, params, db_session, l_files):
                 else:
                     set_polygon(db_session, 0, query_id, pol_coordinates, True)
 
-            size = size_photo(params['ps_width'],
-                            params['ps_height'], 
-                            params['focal_length'],
-                            params['fly_height'])
+            size = size_photo(float(params['ps_width']),
+                              float(params['ps_height']),
+                              float(params['focal_length']),
+                              float(params['fly_height']))
+
             polygons = get_polygon_coords(db_session, query_id, 1)
-            start_point = [params['lat-dot'], params['lon-dot']]
+            start_point = [float(params['lat-dot']), float(params['lon-dot'])]
             valid, path = algorithm(polygons,
-                            size,
-                            start_point,
-                            params['fly_loss'],
-                            params['photo_loss'],
-                            params['battery_capacity'])
-            # ToDo
+                                    size,
+                                    start_point,
+                                    float(params['fly_loss']),
+                                    float(params['photo_loss']),
+                                    float(params['battery_capacity']))
             if valid:
-                # status - done
+                query_table.update().values(status=0).where(query_table.c.id == query_id)
                 set_path_coords(db_session, path, query_id)
-            # else:
-                # status - not done
+            else:
+                query_table.update().values(status=1).where(query_table.c.id == query_id)
 
     else:
         print(time_now(str(datetime.now())))
@@ -263,25 +263,24 @@ def set_query(session, params, db_session, l_files):
                 set_polygon(db_session, 1, query_id, pol_coordinates)
             else:
                 set_polygon(db_session, 0, query_id, pol_coordinates)
+        size = size_photo(float(params['ps_width']),
+                          float(params['ps_height']),
+                          float(params['focal_length']),
+                          float(params['fly_height']))
 
-        size = size_photo(params['ps_width'],
-                            params['ps_height'], 
-                            params['focal_length'],
-                            params['fly_height'])
         polygons = get_polygon_coords(db_session, query_id, 1)
-        start_point = [params['lat-dot'], params['lon-dot']]
+        start_point = [float(params['lat-dot']), float(params['lon-dot'])]
         valid, path = algorithm(polygons,
-                        size,
-                        start_point,
-                        params['fly_loss'],
-                        params['photo_loss'],
-                        params['battery_capacity'])
-        # ToDo
+                                size,
+                                start_point,
+                                float(params['fly_loss']),
+                                float(params['photo_loss']),
+                                float(params['battery_capacity']))
         if valid:
-            # status - done
+            query_table.update().values(status=0).where(query_table.c.id == query_id)
             set_path_coords(db_session, path, query_id)
-        # else:
-            # status - not done
+        else:
+            query_table.update().values(status=1).where(query_table.c.id == query_id)
 
 
 def set_polygon(db_session, polygon_type, query_id, coordinates, from_csv=False):
