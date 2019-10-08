@@ -1,0 +1,65 @@
+﻿ <html>
+    <head>
+        <html lang="ru">
+        <meta charset="UTF-8">
+        <link rel="stylesheet" href="newphotos.css">
+        <title>Обробка фотографій</title> 
+        <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+
+    </head>
+        
+    <body>
+        
+       <div class="container">
+           
+           <div class="processing">
+               <em class="at"><b>&nbsp;</b></em>
+               <div class="block_content"> 
+               <p align = "center"><div class="text" align = "center">Пошук найбільш чіткого фото</div></p>
+                   
+                   
+                <div class="button" align = "center"> 
+                    <p>Завантажити фото</p>
+                    <p class="button-upload"><i class="fas fa-upload test"></i></p>
+                </div>
+                   
+               
+               </div>
+               <em class="ab"><b>&nbsp;</b></em>
+           </div>
+           
+           
+           <div class = "improvement">
+               <em class="bt"><b>&nbsp;</b></em>
+               <div class="block_content"> 
+               <p align = "center"><div align = "center" class="text">Відновлення найбільш чіткого фото</div></p>
+               <div class="button" align = "center"> 
+                    <p>Завантажити фото</p>
+                    <p class="button-improve"><i class="fas fa-upload test"></i></p>
+                </div>
+               </div>
+               <em class="bb"><b>&nbsp;</b></em>
+           </div>
+           <input type='file' class="input-1" accept="image/jpeg, image/png">
+           <input type='file' class="input-2">
+        </div>
+     <script>
+         $(document).ready(function(){
+             
+             console.log("READY");
+             $(".button-upload").click(function(){
+                $(".input-1").trigger("click")  
+             });
+                                       
+             $(".button-improve").click(function(){
+                $(".input-2").trigger("click")  
+             }); 
+        });
+
+     </script>
+    </body>
+</html>
