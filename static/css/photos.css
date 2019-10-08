@@ -1,0 +1,88 @@
+html{
+    overflow-x: hidden;
+}
+
+body{
+    background-color: #37393c;
+    color: white;
+    font-family: 'PT Sans', sans-serif;
+}
+
+.container{
+    margin-top: 10vh;
+    display: grid;
+    grid-template-columns: 45vw 45vw;
+    grid-template-rows: 1fr;
+}
+
+.processing{
+    width: 40vw;
+    height: 60vh;
+    margin-left: 5vw;
+    border: 1px;
+    border-color: white;
+    border: solid;
+    background: #202223;
+    font-size: 20.5;
+    border-radius: 15px;
+    font-weight: 600;
+    
+}
+
+.improvement{
+    width: 40vw;
+    height: 60vh;
+    margin-right: 5vw;
+    margin-left: 10vw;
+    border: 1px;
+    border-radius: 15px;
+    border-color: white;
+    border: solid;
+    background: #202223;
+    font-size: 20.5;
+    font-weight: 600;
+}
+
+em.at. em.ab. em.bt. em.bb. {
+    display: block;
+    height: 10px;
+    position: relative;
+} 
+
+.button{
+    font-size: 19px;
+    font-weight: 500;
+    border: 2px;
+    border: solid;
+    border-radius: 25px;
+    width: 30vw;
+    margin-left: 3.5vw;
+    margin-top: 9vh;
+}
+
+.button-improve{
+    font-size: 30px; 
+}
+
+.button-upload{
+    font-size: 30px; 
+}
+
+.test:hover{
+    color: yellow;
+}
+
+.text{
+    height: 9vh;
+}
+
+.input-1{
+    display: none;
+}
+
+.input-2{
+    display: none;
+}
+
+
+
