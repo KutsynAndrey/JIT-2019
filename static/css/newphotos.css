@@ -1,0 +1,186 @@
+﻿html{
+    overflow-x: hidden;
+}
+
+body{
+    background-color: #37393c;
+    color: white;
+    font-family: 'PT Sans', sans-serif;
+}
+
+.container{
+    margin-top: 10vh;
+    margin-left: 5vw;
+    display: grid;
+    grid-template-columns: 35vw 35vw;
+    grid-template-rows: 1fr;
+}
+
+.processing{
+    width: 35vw;
+    height: 31vh;
+    margin-left: 5vw;
+    border: 1px;
+    border-color: white;
+    
+    background: #202223;
+    font-size: 3.1vh;
+    border-radius: 15px;
+    font-weight: 600;
+    
+}
+
+.improvement{
+    width: 35vw;
+    height: 31vh;
+    margin-right: 5vw;
+    margin-left: 10vw;
+    border: 1px;
+    border-radius: 15px;
+    border-color: white;
+    /*border: solid;*/
+    background: #202223;
+    font-size: 3.1vh;
+    font-weight: 600;
+}
+
+em.at. em.ab. em.bt. em.bb. {
+    display: block;
+    height: 10px;
+    position: relative;
+} 
+
+.button{
+    height: 14vh;
+    font-size: 2.775vh;
+    font-weight: 500;
+    border: 1px;
+    border: solid;
+    border-color: #37393c;
+    border-radius: 25px;
+    width: 30vw;
+    margin-left: 2vw;
+    margin-top: 9vh;
+}
+
+.button-improve{
+    margin-top: -2.3vh;
+    font-size: 4vh; 
+}
+
+.button-upload{
+    margin-top: -2.3vh;
+    font-size: 4vh; 
+}
+
+.button-send{
+    font-size: 4vh;
+}
+
+.button-send:hover{
+    color: yellow;
+}
+
+.test:hover{
+    color: yellow;
+}
+
+.text{
+    margin-top: -3.8vh;
+    height: 1vh;
+    font-size: 2.6vh;
+    width: 33vw;
+    margin-left: 1.5vw;
+}
+
+.input-1{
+    display: none;
+}
+
+.input-2{
+    display: none;
+}
+
+.input-3{
+    display: none;
+}
+
+.send{
+    height: 10vh;
+    font-size: 2.7vh;
+    font-weight: 500;
+    width: 30vw;
+    margin-left: 23vw;
+    margin-top: 3vh;
+    font-weight: 600;
+}
+
+.sendarea{
+    margin-left: -30vw;
+    height: 18vh;
+    margin-top: 21vh;
+    width: 75vw;
+    border-radius: 25px;
+    background-color: #202223;
+}
+
+.sendbutton{
+    display: none; 
+}
+
+.AIimprove{
+    width: 75vw;
+    height: 16vh;
+    border-radius: 25px;
+    background-color: #202223;
+    margin-left: 5vw;
+    margin-top: 2vh;
+}
+
+.AItext{
+    font-size: 2.5vh;
+    font-weight: 600;
+}
+
+.button-ai{
+    border-radius: 25px;
+    border: solid;
+    border-width: 2px;
+    width: 40vw;
+    height: 6.2vh;
+    font-size: 2.7vh;
+    margin-top: 1vh;
+    margin-left: 15vw;
+    border-color: #37393c;
+}
+
+.test3{
+    margin-left: 2vw;
+    font-size: 4vh;
+}
+
+.AIupload{
+    margin-top: -2vh;
+}
+
+.test3:hover{
+    color: yellow;
+}
+
+@media screen and (max-width: 660px){
+    
+    .AItext{
+        font-size: 2.7vw;
+    }
+    
+    .AIupload{
+        width: 40vw;
+        margin-top: -5vh;
+    }
+    
+    .button-ai{
+        width: 40vw;
+        margin-top: 0;
+    }
+}
+
