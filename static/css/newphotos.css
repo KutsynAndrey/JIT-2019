@@ -118,7 +118,7 @@ em.at. em.ab. em.bt. em.bb. {
 .sendarea{
     margin-left: -30vw;
     height: 18vh;
-    margin-top: 21vh;
+    margin-top: 25vh;
     width: 75vw;
     border-radius: 25px;
     background-color: #202223;
@@ -130,7 +130,7 @@ em.at. em.ab. em.bt. em.bb. {
 
 .AIimprove{
     width: 75vw;
-    height: 16vh;
+    height: 20vh;
     border-radius: 25px;
     background-color: #202223;
     margin-left: 5vw;
@@ -138,6 +138,9 @@ em.at. em.ab. em.bt. em.bb. {
 }
 
 .AItext{
+    width: 70vw;
+    height: 7vh;
+    margin-left: 2.5vw;
     font-size: 2.5vh;
     font-weight: 600;
 }
@@ -149,7 +152,7 @@ em.at. em.ab. em.bt. em.bb. {
     width: 40vw;
     height: 6.2vh;
     font-size: 2.7vh;
-    margin-top: 1vh;
+    margin-top: -1vh;
     margin-left: 15vw;
     border-color: #37393c;
 }
@@ -167,20 +170,5 @@ em.at. em.ab. em.bt. em.bb. {
     color: yellow;
 }
 
-@media screen and (max-width: 660px){
-    
-    .AItext{
-        font-size: 2.7vw;
-    }
-    
-    .AIupload{
-        width: 40vw;
-        margin-top: -5vh;
-    }
-    
-    .button-ai{
-        width: 40vw;
-        margin-top: 0;
-    }
-}
+
 
