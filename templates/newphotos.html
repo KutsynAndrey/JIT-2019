@@ -1,20 +1,19 @@
 ﻿ <html>
     <head>
-        <html lang="ru">
+        {% include 'header.html' %}
         <meta charset="UTF-8">
-        <link rel="stylesheet" href="newphotos.css">
         <title>Обробка фотографій</title> 
         <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
         <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
         <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
         <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
+        <link rel="stylesheet" href='../static/css/newphotos.css'>
     </head>
         
     <body>
-        
-       <div class="container">
+       {% include 'nav.html' %}
+       <div class="main-container">
            
            <div class="processing">
                <em class="at"><b>&nbsp;</b></em>
@@ -42,44 +41,38 @@
                </div>
                <em class="bb"><b>&nbsp;</b></em>
            </div>
-        
-        <div class="AIimprove">
-            <p ><div align = "center" class="AItext">Покращення якості зображення за допомогою штучного інтелекту</div></p>
-        
-            <div class="button-ai" align = "center"> 
-                <div class="AIupload"><p>Завантажити фото<i class="fas fa-upload test3"></i></p></div>
-            </div>
-        
-        </div>
-        
         <div class="sendarea">
             <div class="send" align="center">
                 <p>Надіслати фото</p>
                 <p class="button-send"><i class="fas fa-file-import"></i></p>         
             </div>
         </div>
-        
+           {% if status == 1 or status == 2 %}
+              <div class="result">
+                   <img src="../static/tmp-photos/{{ p_name }}.jpeg" class="result-img">
+              </div>
+              <a href="download-result">Завантажити фото</a>
+           {% endif %}
         <form method="post" enctype="multipart/form-data">
-            <input type='file' class="input-1" accept="image/jpeg, image/png">
-            <input type='file' class="input-2" accept="image/jpeg, image/png">
-            <input type='file' class="input-3" accept="image/jpeg, image/png">
+            <div class="inputs">
+            <input type='file' class="input-1" name="improve-quality" accept="image/jpeg, image/png" multiple>
+            <input type='file' class="input-2" name="sort-quality" accept="image/jpeg, image/png" multiple>
+            <input type='file' class="input-3" name="AI-improving" accept="image/jpeg, image/png">
+            <input type="submit" class="sendbutton">
+            </div>
         </form>
-        
-        <input type="submit" class="sendbutton">
-        
-        
+
         </div>
-     
      <script>
          $(document).ready(function(){
              
              console.log("READY");
              $(".button-upload").click(function(){
-                $(".input-1").trigger("click")  
+                $(".input-2").trigger("click")
              });
                                        
              $(".button-improve").click(function(){
-                $(".input-2").trigger("click")  
+                $(".input-1").trigger("click")
              }); 
              
              $(".test3").click(function(){
@@ -89,9 +82,13 @@
              $(".button-send").click(function(){
                  $(".sendbutton").trigger("click")
              });
-        });
-       
 
+             {% if session["photos doesn't exist"] == True %}
+                alert("Оберіть фото");
+             {% elif session["choose one operation"] == True %}
+                alert("Оберіть один спосіб обробки фото");
+             {% endif %}
+        });
      </script>
     </body>
 </html>

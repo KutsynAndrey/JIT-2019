@@ -1,9 +1,11 @@
 from flask import Flask
-from flask import render_template, session, request, redirect
+from flask import render_template, session, request, redirect, send_file, send_from_directory
 from db import Session
 from db import set_query, set_user, get_user, get_queries, get_coord, get_query, get_polygon_coords, get_path_coords
 from functional import clear_errors, init_session
-
+from photo_processing.functional import photo_page_solution
+from cv2 import imwrite
+import datetime
 
 db_session = Session()
 app = Flask(__name__)
@@ -59,12 +61,36 @@ def logout():
     return redirect('/')
 
 
-@app.route('/task/<int:task_id>')
+@app.route('/task/<int:task_id>', methods=['POST', 'GET'])
 def task(task_id):
     obj = get_query(db_session, session, task_id)
     x, y = get_polygon_coords(db_session, obj.id)
     path_coords = get_path_coords(db_session, task_id, True)
     return render_template('task.html', session=session, obj=obj, coordinates=(x, y), path=path_coords)
+
+
+@app.route('/img-processing', methods=['POST', 'GET'])
+def img_processing():
+    clear_errors(session)
+    result = [0, 0]
+    name = None
+    if request.method == 'POST':
+        images = request.files.getlist("improve-quality")
+        images2 = request.files.getlist("sort-quality")
+        image = request.files["AI-improving"]
+        print(images)
+        print(images2)
+        print(image)
+        result = photo_page_solution(images, images2, image, session)
+        name = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+        imwrite("/home/andrey/GitFolder/JIT-2019/static/tmp-photos/" + name + '.jpeg', result[1])
+    return render_template('newphotos.html', session=session, status=result[0], p_name=name)
+
+
+@app.route('/download-result', methods=['GET'])
+def img_download():
+    path = "/home/andrey/GitFolder/JIT-2019/static/tmp-photos/result.jpeg"
+    return send_file(path, as_attachment=True, attachment_filename="hi.jpeg", cache_timeout=0)
 
 
 if __name__ == '__main__':

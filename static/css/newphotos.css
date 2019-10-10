@@ -8,12 +8,19 @@ body{
     font-family: 'PT Sans', sans-serif;
 }
 
-.container{
+.main-container{
     margin-top: 10vh;
     margin-left: 5vw;
     display: grid;
     grid-template-columns: 35vw 35vw;
     grid-template-rows: 1fr;
+}
+
+.result-img{
+    margin-top: 40px;
+    margin-left: -27vw;
+    margin-top: 30vh;
+    width: 70vw;
 }
 
 .processing{
@@ -44,13 +51,13 @@ body{
     font-weight: 600;
 }
 
-em.at. em.ab. em.bt. em.bb. {
-    display: block;
-    height: 10px;
+.download-result{
     position: relative;
-} 
+    margin-top: -30vh;
+}
 
 .button{
+    padding-top: 20px;
     height: 14vh;
     font-size: 2.775vh;
     font-weight: 500;
@@ -64,12 +71,10 @@ em.at. em.ab. em.bt. em.bb. {
 }
 
 .button-improve{
-    margin-top: -2.3vh;
     font-size: 4vh; 
 }
 
 .button-upload{
-    margin-top: -2.3vh;
     font-size: 4vh; 
 }
 
@@ -93,18 +98,9 @@ em.at. em.ab. em.bt. em.bb. {
     margin-left: 1.5vw;
 }
 
-.input-1{
+.inputs{
     display: none;
 }
-
-.input-2{
-    display: none;
-}
-
-.input-3{
-    display: none;
-}
-
 .send{
     height: 10vh;
     font-size: 2.7vh;
@@ -116,12 +112,14 @@ em.at. em.ab. em.bt. em.bb. {
 }
 
 .sendarea{
-    margin-left: -30vw;
+    margin-left: 5vw;
     height: 18vh;
-    margin-top: 21vh;
+    margin-top: 7vh;
     width: 75vw;
     border-radius: 25px;
     background-color: #202223;
+    position: relative;
+    z-index: 5;
 }
 
 .sendbutton{
