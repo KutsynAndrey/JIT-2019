@@ -39,6 +39,8 @@ def init_session(session):
     session['polygon_has_less_than_3_dots'] = [False, 0]
     session['polygon_has_self-intersection'] = [False, 0]
     session["start-point-doesn't-exist"] = False
+    session["choose one operation"] = False
+    session["photos doesn't exist"] = False
 
 
 def clear_errors(session):
@@ -66,6 +68,9 @@ def clear_errors(session):
     session['polygon_has_less_than_3_dots'] = [False, 0]
     session['polygon_has_self-intersection'] = [False, 0]
     session["start-point-doesn't-exist"] = False
+    session["choose one operation"] = False
+    session["photos doesn't exist"] = False
+
 
 def validation_csv(file):
     file.save(os.path.join('static/uploads', file.filename))
