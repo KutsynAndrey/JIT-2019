@@ -1,0 +1,94 @@
+﻿ <html>
+    <head>
+        {% include 'header.html' %}
+        <meta charset="UTF-8">
+        <title>Обробка фотографій</title> 
+        <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" href='../static/css/newphotos.css'>
+    </head>
+        
+    <body>
+       {% include 'nav.html' %}
+       <div class="main-container">
+           
+           <div class="processing">
+               <em class="at"><b>&nbsp;</b></em>
+               <div class="block_content"> 
+                   <p align = "center"><div class="text" align = "center">Пошук найбільш чіткого фото</div></p>
+
+
+                    <div class="button" align = "center"> 
+                        <p>Завантажити фото</p>
+                        <p class="button-upload"><i class="fas fa-upload test"></i></p>
+                    </div>
+               </div>
+               <em class="ab"><b>&nbsp;</b></em>
+           </div>
+           
+           
+           <div class = "improvement">
+               <em class="bt"><b>&nbsp;</b></em>
+               <div class="block_content"> 
+                   <p align = "center"><div align = "center" class="text">Створення найбільш чіткого фото</div></p>
+                   <div class="button" align = "center"> 
+                        <p>Завантажити фото</p>
+                        <p class="button-improve"><i class="fas fa-upload test"></i></p>
+                    </div>
+               </div>
+               <em class="bb"><b>&nbsp;</b></em>
+           </div>
+        <div class="sendarea">
+            <div class="send" align="center">
+                <p>Надіслати фото</p>
+                <p class="button-send"><i class="fas fa-file-import"></i></p>         
+            </div>
+        </div>
+           {% if status == 1 or status == 2 %}
+              <div class="result">
+                   <img src="../static/tmp-photos/{{ p_name }}.jpeg" class="result-img">
+              </div>
+              <a href="download-result">Завантажити фото</a>
+           {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            <div class="inputs">
+            <input type='file' class="input-1" name="improve-quality" accept="image/jpeg, image/png" multiple>
+            <input type='file' class="input-2" name="sort-quality" accept="image/jpeg, image/png" multiple>
+            <input type='file' class="input-3" name="AI-improving" accept="image/jpeg, image/png">
+            <input type="submit" class="sendbutton">
+            </div>
+        </form>
+
+        </div>
+     <script>
+         $(document).ready(function(){
+             
+             console.log("READY");
+             $(".button-upload").click(function(){
+                $(".input-2").trigger("click")
+             });
+                                       
+             $(".button-improve").click(function(){
+                $(".input-1").trigger("click")
+             }); 
+             
+             $(".test3").click(function(){
+                $(".input-3").trigger("click")  
+             }); 
+             
+             $(".button-send").click(function(){
+                 $(".sendbutton").trigger("click")
+             });
+
+             {% if session["photos doesn't exist"] == True %}
+                alert("Оберіть фото");
+             {% elif session["choose one operation"] == True %}
+                alert("Оберіть один спосіб обробки фото");
+             {% endif %}
+        });
+     </script>
+    </body>
+</html>
