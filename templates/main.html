@@ -2,12 +2,68 @@
 <html>
    <head>
        {% include 'header.html' %}
-      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}"/>
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/main.css') }}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+"/>
+
+
    </head>
    <body>
         {% include 'nav.html' %}
+
         <div class="main-part">
             <a href="{% if not session['is_logged'] %} /sign-up-page {% endif %} {% if session['is_logged'] %} /new-polygon {% endif %}" class="btn"><p class="text-c">Розпочати роботу</p></a>
+        </div>
+        <div class="inscription">
+            <p>JIT-DroneX</p>
         </div>
    </body>
 </html>
