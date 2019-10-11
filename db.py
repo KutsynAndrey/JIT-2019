@@ -7,7 +7,7 @@ from functional import time_now, validation_csv, fill_session_by_valid_code, val
 from algorithm import algorithm
 
 
-engine = create_engine("mysql+mysqlconnector://ollegg:sqlollegg@localhost/JIT", echo=True)
+engine = create_engine("mysql+mysqlconnector://ollegg:sqlollegg@localhost/JIT")
 metadata = MetaData()
 Session = sessionmaker(bind=engine)
 
@@ -32,7 +32,12 @@ query_table = Table('queries', metadata,
                     Column('user_id', Integer, ForeignKey("users.id")),
                     Column('status', Integer),
                     Column('start_lat', Float),
-                    Column('start_lon', Float)
+                    Column('start_lon', Float),
+                    Column('fly_speed', Float),
+                    Column('radian', Float),
+                    Column('spent_battery', Float),
+                    Column('fly_time', Float),
+                    Column('length_route', Float)
                     )
 
 polygon_table = Table('polygon', metadata,
@@ -75,7 +80,7 @@ class User(object):
 
 class Query(object):
 
-    def __init__(self,  user_id, time, focal_length, w, h, fly_height, capacity, f_loss, p_loss, status, s_lat, s_lon):
+    def __init__(self,  user_id, time, focal_length, w, h, fly_height, capacity, f_loss, p_loss, status, radian, spent_battery, fly_time, fly_speed, s_lat, s_lon, length_route):
         self.user_id = user_id
         self.query_date = time
         self.focal_length = focal_length
@@ -86,8 +91,13 @@ class Query(object):
         self.fly_loss = f_loss
         self.photo_loss = p_loss
         self.status = status
+        self.fly_speed = fly_speed
+        self.radian = radian
         self.start_lat = s_lat
         self.start_lon = s_lon
+        self.spent_battery = spent_battery
+        self.fly_time = fly_time
+        self.length_route = length_route
 
     def __repr__(self):
         return "<Query('%s', '%s')>" % (self.fly_height, self.query_date)
@@ -183,7 +193,6 @@ def set_query(session, params, db_session, l_files):
             fill_session_by_valid_code(session, code, row, column)
             return -1
         else:
-
             query = Query(session['user_id'],
                           time_now(str(datetime.now())),
                           params['focal_length'],
@@ -194,8 +203,13 @@ def set_query(session, params, db_session, l_files):
                           params['fly_loss'],
                           params['photo_loss'],
                           -1,
+                          0,
+                          0,
+                          0,
+                          params['fly_speed'],
                           params['lat-dot'],
-                          params['lon-dot']
+                          params['lon-dot'],
+                          0
                           )
 
             db_session.add(query)
@@ -213,14 +227,15 @@ def set_query(session, params, db_session, l_files):
 
             size = size_photo(float(params['ps_width']),
                               float(params['ps_height']),
-                              float(params['focal_length']),
-                              float(params['fly_height']))
+                              float(params['fly_height']),
+                              float(params['focal_length']))
 
             polygons = get_polygon_coords(db_session, query_id, 1)
             start_point = [float(params['lat-dot']), float(params['lon-dot'])]
-            valid, path = algorithm(polygons,
+            valid, path, radian, spent_battery, fly_time, length_route = algorithm(polygons,
                                     size,
                                     start_point,
+                                    float(params['fly_speed']),
                                     float(params['fly_loss']),
                                     float(params['photo_loss']),
                                     float(params['battery_capacity']))
@@ -228,6 +243,10 @@ def set_query(session, params, db_session, l_files):
                 print("VALID", query_id)
                 tmp_query = db_session.query(Query).filter_by(id=query_id).first()
                 tmp_query.status = 0
+                tmp_query.radian = radian
+                tmp_query.spent_battery = spent_battery
+                tmp_query.fly_time = fly_time
+                tmp_query.length_route = length_route
                 db_session.commit()
                 set_path_coords(db_session, path, query_id)
             else:
@@ -248,8 +267,13 @@ def set_query(session, params, db_session, l_files):
                       params['fly_loss'],
                       params['photo_loss'],
                       -1,
+                      0,
+                      0,
+                      0,
+                      params['fly_speed'],
                       params['lat-dot'],
-                      params['lon-dot']
+                      params['lon-dot'],
+                      0
                       )
 
         db_session.add(query)
@@ -270,14 +294,16 @@ def set_query(session, params, db_session, l_files):
                 set_polygon(db_session, 0, query_id, pol_coordinates)
         size = size_photo(float(params['ps_width']),
                           float(params['ps_height']),
-                          float(params['focal_length']),
-                          float(params['fly_height']))
+                          float(params['fly_height']),
+                          float(params['focal_length']))
 
         polygons = get_polygon_coords(db_session, query_id, 1)
         start_point = [float(params['lat-dot']), float(params['lon-dot'])]
-        valid, path = algorithm(polygons,
+        print("START_POINT_PARAMS:", start_point)
+        valid, path, radian, spent_battery, fly_time, length_route = algorithm(polygons,
                                 size,
                                 start_point,
+                                float(params['fly_speed']),
                                 float(params['fly_loss']),
                                 float(params['photo_loss']),
                                 float(params['battery_capacity']))
@@ -285,11 +311,19 @@ def set_query(session, params, db_session, l_files):
             print("VALID", query_id)
             tmp_query = db_session.query(Query).filter_by(id=query_id).first()
             tmp_query.status = 0
+            tmp_query.radian = radian
+            tmp_query.spent_battery = spent_battery
+            tmp_query.fly_time = fly_time
+            tmp_query.length_route = length_route
+            print(tmp_query.fly_speed)
             db_session.commit()
             set_path_coords(db_session, path, query_id)
         else:
             tmp_query = db_session.query(Query).filter_by(id=query_id).first()
             tmp_query.status = 1
+            tmp_query.spent_battery = spent_battery
+            tmp_query.fly_time = fly_time
+            tmp_query.length_route = length_route
             db_session.commit()
 
 
@@ -406,7 +440,6 @@ def get_polygon_coords(db_session, query_id, for_algorithm=False):
 
 
 def set_path_coords(db_session, dot_list, query_id):
-    print('DOT_LIST:', dot_list)
     for i in range(len(dot_list)):
         point = PathCoord(str(dot_list[i][0]),
                           str(dot_list[i][1]),
@@ -418,15 +451,17 @@ def set_path_coords(db_session, dot_list, query_id):
 
 def get_path_coords(db_session, query_id, like_str=False):
     dots = db_session.query(PathCoord).filter_by(query_id=query_id).all()
-
+    print(dots)
     if like_str:
         lat = ''
         lon = ''
-        for dot in dots:
-            lat += str(dot.latitude_gc)
-            lon += str(dot.longitude_gc)
+        for i in range(len(dots)):
+            lat += str(dots[i].latitude_gc)
+            lon += str(dots[i].longitude_gc)
+            if i != len(dots) - 1:
+                lat += ' '
+                lon += ' '
+        print(lat)
         return lat, lon
 
     return dots
-
-

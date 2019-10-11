@@ -66,15 +66,15 @@ class TransformedDict(collections.abc.MutableMapping):
     def __len__(self):
         return len(self.store)
 
-    def __lt__(self, other):
-    	return len(self.store) < len(other.store)
+    # def __lt__(self, other):
+    # 	return len(self.store) < len(other.store)
 
     def __keytransform__(self, key):
         return key
 
 class MyTransformedDict(TransformedDict):
     def __keytransform__(self, key):
-        return round(key, 2)
+        return round(key, 5)
 
     def __repr__(self):
     	return "{}".format(self.store)
