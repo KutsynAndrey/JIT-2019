@@ -9,7 +9,7 @@
 
 ### Connecting Mysql
 
-__<1>__ Set your username/password and database name in *db.py* file in this string
+__<1>__ Set your username/password and database name in *db.py* file in this string  
         engine = create_engine("mysql+mysqlconnector://<*username*>:<*password*>@localhost/<*database name*>")
 
 ### Install all libraries from *requirements.txt*
