@@ -4,7 +4,7 @@
 
 ### Installing MySQL
 
-*__<1>__ sudo apt-get update*.
+*__<1>__ sudo apt-get update*.  
 *__<2>__ sudo apt-get install mysql-server*.
 
 ### Connecting Mysql
