@@ -7,6 +7,11 @@
 *__<1>__ sudo apt-get update*.  
 *__<2>__ sudo apt-get install mysql-server*.
 
+### Creating database
+*__<1>__ sudo mysql -u <username> -p*.
+*__<2>__ CREATE DATABASE <databasename>;*.        
+*__<3>__ exit;*.
+        
 ### Connecting Mysql
 
 __<1>__ Set your username/password and database name in *db.py* file in this string  
