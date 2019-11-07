@@ -1,0 +1,83 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Побудова карти</title>
+        {% include 'header.html' %}
+        <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" href='../static/css/create_map.css'>
+    </head>
+        
+    <body>
+        {% include 'nav.html' %}
+        <div class="mainblock">
+        <div class="text" align = "center">Побудова карти</div>
+    
+        <div class="main-container">
+
+            <div class="uploadarea">    
+                <div class="upload" align = "center"> 
+                    <p>Завантажити фото</p>
+                    <p class="button-upload"><i class="fas fa-upload test"></i></p>
+                </div>
+            </div>
+        
+            <div class="sendarea">
+                <div class="send" align="center">
+                    <p>Надіслати фото</p>
+                    <p class="button-send"><i class="fas fa-file-import"></i></p>         
+                </div>
+            </div>
+           
+           <div class="downloadarea">
+                <div class="download" align="center">
+                    <p>Завантажити додаткову інформацію</p>
+                    <p class="button-download"><i class="fas fa-upload"></i></p>
+                </div>
+            </div>
+
+            {% if session["map-ready"] %}
+                <a href="/download-result/{{session['map-name']}}">Завантажити результат</a>
+            {% endif %}
+
+
+        </div>
+        <form method="post" enctype="multipart/form-data">
+            <div class="hidden-div">
+            <input type='file' class="input" name="input" accept="image/jpeg, image/png" multiple>  
+            <input type='file' class="input-information" name="input-information">
+            <input type="submit" class="sendbutton">
+            </div>
+            <div class="scale-div">
+                <p class="scale-text">Масштаб</p>
+                <input value="1.0" type='number' name="scale" min="0.01" max="1" step="0.01">
+            </div>
+     
+        </form>
+
+        </div>
+         <script>
+             $(document).ready(function(){
+                console.log("READY");
+                $(".button-upload").click(function(){
+                     $(".input").trigger("click")
+                });
+                 
+                $(".button-send").click(function(){
+                    $(".sendbutton").trigger("click")
+                });
+
+                 $(".button-download").click(function(){
+                    $(".input-information").trigger("click")
+                });
+
+            });
+            {% if session["map-creator-memory-error"] %}
+                alert("Не выстачає місця, змініть масштаб")
+            {% endif %}
+         </script>
+    </body>
+</html>

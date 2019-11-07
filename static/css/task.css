@@ -55,6 +55,28 @@ p {
     font-size: 20px;
 }
 
+.overlay {
+    position: absolute;
+    top: 7vw;
+    left: 5vw;
+}
+ 
+.overlay button {
+    font:600 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+    background-color: #3386c0;
+    color: #fff;
+    display: inline-block;
+    margin: 0;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 3px;
+}
+ 
+.overlay button:hover {
+    background-color:#4ea0da;
+}
+
 
 /************************************************  FORM  ***********************************/
 
@@ -230,4 +252,35 @@ p {
     width: auto;
     margin: 0 0 0 8px;
     color: #efefef;
+}
+
+.status {
+    position: absolute;
+    color: white;
+    margin-top: 10vw;
+    font-size: 20px;
+    left: 30%;
+    margin-right: -70%;
+}
+
+.info_query {
+    position: absolute;
+    color: white;
+    margin-top: 12vw;
+    font-size: 20px;
+    left: 20%;
+    margin-right: -80%;
+}
+
+.inquiries {
+    font-size: 24px;
+}
+
+.parameters {
+    font-weight: bolder;
+}
+
+td {
+    padding: 5px;
+    text-align: center;
 }

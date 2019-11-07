@@ -21,6 +21,9 @@
 
         <div class = "main-functional">
             <div class="map" id='map'></div>
+            <div class='overlay'>
+                <button id='replay'>Replay</button>
+            </div>
             <div class="input-box">
                 <form class="form" method="post" enctype="multipart/form-data">
                     <div class='div'>
@@ -40,22 +43,72 @@
                         <input value="{{ obj.ps_width }}" class="input" type="text" name="ps_width" required readonly>
                     </div>
                     <div class='div'>
-                        <label class="label">Об'єм батареї дрона (mAh)</label><br>
+                        <label class="label">Ємність батареї дрона (Ah)</label><br>
                         <input value="{{ obj.battery_capacity }}" class="input" type="text" name="battery_capacity" required readonly>
                     </div>
                     <div class='div'>
-                        <label class="label">Витрати заряду на фото (mAh)</label><br>
+                        <label class="label">Витрати заряду на фото (A)</label><br>
                         <input value="{{ obj.photo_loss }}" class="input" type="text" name="photo_loss" required readonly>
                     </div>
                     <div class='div'>
-                        <label class="label">Витрати заряду на політ (mAh/метр)</label><br>
+                        <label class="label">Витрати заряду на політ (A)</label><br>
                         <input value="{{ obj.fly_loss }}" class="input" type="text" name="fly_loss" required readonly>
                     </div>
+                    <div class='div'>
+                        <label class="label">Швидкість дрона (кілометр/година)</label><br>
+                        <input value="{{ obj.fly_speed }}" class="input" type="text" name="fly_speed" required readonly>
+                    </div>
+                    {% if obj.status == 1 %}
+                        <div class = "status">
+                            Політ неможливий, недостатньо ємності батареї.</div>
+                        <div class = "info_query">
+                            <table border="1" width="100%" bordercolor="white">
+                                <tr>
+                                    <td class='parameters'>#</td>
+                                    <td class='parameters'>Час</td>
+                                    <td class='parameters'>Єнергія(Ah)</td>
+<!--                                    <td class='parameters'>Шлях</td>-->
+                                </tr>
+                                <tr>
+                                    <td class='parameters'>Вимоги до польоту</td>
+                                    <td>{{ (obj.fly_time * 3600 / 60)|int}} годин {{ (obj.fly_time * 3600)|int}} хвилин</td>
+                                    <td>{{ obj.spent_battery }}</td>
+<!--                                    <td>{{ (obj.length_route / 1000)|int }} кілометрів {{
+                                    (obj.length_route % 1000)|int}} метрів</td>-->
+                                </tr>
+                            </table>
+                        </div>
+                    {% else %}
+                        <div class = "info_query">
+                            <table border="1" width="100%" bordercolor="white">
+                                <tr>
+                                    <td class='parameters'>#</td>
+                                    <td class='parameters'>Час</td>
+                                    <td class='parameters'>Єнергія(Ah)</td>
+<!--                                    <td class='parameters'>Шлях</td>-->
+                                </tr>
+                                <tr>
+                                    <td class='parameters'>Результати польоту</td>
+                                    <td>{{ (obj.fly_time * 3600 / 60)|int}} годин {{ (obj.fly_time * 3600)|int}} хвилин</td>
+                                    <td>{{ obj.spent_battery }}</td>
+<!--                                    <td>{{ (obj.length_route / 1000)|int }} кілометрів {{
+                                    (obj.length_route % 1000)|int}} метрів</td>-->
+                                </tr>
+                            </table>
+                        </div>
+                    {% endif %}
                     <div name='PolygonsCoords' class='coords'>
                          <input value="{{ coordinates[0] }}" type="text" id='latitude-GC' name='latitude-GC'>
                          <input value="{{ coordinates[1] }}" type="text" id='longitude-GC' name='longitude-GC'>
                          <input value="{{ path[0] }}" type="text" id="path-lat" name="path-coordinates-lat">
                          <input value="{{ path[1] }}" type="text" id="path-lon" name="path-coordinates-lon">
+                         <input value="{{ obj.status }}" type="text" id="query-status" name="query-status">
+                         <input value="{{ obj.radian }}" type="text" id="radian" name="query-radian">
+                         <input value="{{ obj.ps_width }}" type="text" id="photo-width" name="photo-width">
+                         <input value="{{ obj.ps_height }}" type="text" id="photo-height" name="photo-height">
+                         <input value="{{ obj.fly_height }}" type="text" id="height" name="height">
+                         <input value="{{ obj.focal_length }}" type="text" id="focus" name="focus">
+                         <input value="{{ obj.fly_time }}" type="text" id="fly_time" name="fly_time">
                     </div>
                 </form>
             </div>

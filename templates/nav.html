@@ -2,11 +2,11 @@
   <div class="container">
     <ul class="nav navbar-nav navbar-left">
         <li>
-            <a href="/">Главная</a>
+            <a href="/">Головна</a>
         </li>
         {% if session['is_logged'] %}
         <li>
-            <a href="/new-polygon">Добавить таск</a>
+            <a href="/new-polygon">Додати завдання</a>
         </li>
         <li>
             <a href="/img-processing">Обробка зображень</a>
@@ -17,22 +17,22 @@
     <ul class="nav navbar-nav navbar-right">
         {% if session['is_logged'] %}
         <li>
-          <a href="/profile/{{session['nickname']}}">Профиль</a>
+          <a href="/profile/{{session['nickname']}}">Профіль</a>
         </li>
         {% endif %}
         {% if session['is_logged'] %}
         <li>
-          <a href="/logout">Выход</a>
+          <a href="/logout">Вихід</a>
         </li>
         {% endif %}
         {% if not session['is_logged'] %}
         <li>
-          <a href="/sign-in-page">Вход</a>
+          <a href="/sign-in-page">Вхід</a>
         </li>
         {% endif %}
          {% if not session['is_logged'] %}
         <li>
-          <a href="/sign-up-page">Регистрация</a>
+          <a href="/sign-up-page">Реєстрація</a>
         </li>
         {% endif %}
     </ul>

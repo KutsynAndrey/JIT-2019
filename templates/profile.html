@@ -19,19 +19,17 @@
                 </div>
             </div>
             <div class="table">
+                <div class="inquiries">Список запитів</div>
                 <table border="1" width="100%" bordercolor="white">  
                     <tr>
-                        <div class="inquiries">Список запитів</div>
                         <td>№</td>
-                        <td>Дата</td>
-                        <td>Час</td>
+                        <td>Дата та Час</td>
                         <td>Посилання на запит</td>
                     </tr>
                     {% for ii in range(length) %}
                     <tr>
                         <td>{{ ii+1 }}</td>
                         <td>{{ queries[ii].query_date }}</td>
-                        <td></td>
                         <td><a href="/task/{{ queries[ii].id }}">Відкрити</a></td>
                     </tr>
                     {% endfor %}

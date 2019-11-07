@@ -70,8 +70,8 @@ function onDragEnd() {
 function SaveMarkerCoordinates(coords) {
     let StartLat = document.getElementById('lat-dot'),
         StartLong = document.getElementById('lon-dot');
-    StartLat.value = String(coords.lat);
-    StartLong.value = String(coords.lng);
+    StartLat.value = coords.lat;
+    StartLong.value = coords.lng;
     console.log("StartPoint:", StartLat.value, StartLong.value);
     console.log(coords);
 }
@@ -95,7 +95,13 @@ function GetCoords(e) {
     console.log(polygonsDMS);
     if(polygonsId.length != 0) {
         let polygon = polygonsGC[polygonsId[0]];
-        marker.setLngLat(polygon[0]).addTo(map);
+        let point = [polygon[0][0], polygon[0][1]];
+        for(let i = 0; i < polygon.length - 1; i++) {
+            if(polygon[i][1] > point[1]) {
+                point = polygon[i];
+            }
+        }
+        marker.setLngLat(point).addTo(map);
         onDragEnd();
     } else {
         marker.remove();
