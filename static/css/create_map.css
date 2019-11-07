@@ -1,0 +1,100 @@
+@font-face {
+	font-family: 'Proxima Nova Rg';
+	src: url('ProximaNova-Regular.eot');
+	src: local('Proxima Nova Regular'), local('ProximaNova-Regular'),
+		url('ProximaNova-Regular.eot?#iefix') format('embedded-opentype'),
+		url('ProximaNova-Regular.woff') format('woff'),
+		url('ProximaNova-Regular.ttf') format('truetype');
+	font-weight: normal;
+	font-style: normal;
+}
+
+
+
+html{
+    height: 100vh;
+    width: 100vw;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    font-family: 'Proxima Nova Rg';
+    overflow: hidden;
+    color: aliceblue;
+    overflow: hidden;
+}
+
+body{
+    background-image: linear-gradient(rgb(0, 0, 0, 0.5), rgb(0, 0, 0, 0.5)), url("../img/imgmap.jpg");
+}
+
+.main-container{
+    margin-top: 40vh;
+    margin-left: 18vw;
+    display: grid;
+    grid-template-columns: 23vw 23vw 23vw;
+    grid-template-rows: 1fr;
+    font-size: 18px;
+}
+
+.text{
+    font-size: 40px;
+    font-weight: 600;
+    margin-top: 15vh;
+    color: white;
+}
+
+.uploadarea{
+    border: solid;
+    border-radius: 25px;
+}
+
+.scale-text{
+    color: white;
+}
+
+.scale-div{
+    margin-left: 43vw;
+}
+
+.uploadarea{
+    border: solid;
+    border-radius: 25px; 
+    margin-left: -7vw;
+    margin-right: 6vw;
+    color: white;
+}
+
+.sendarea{
+    border: solid;
+    border-radius: 25px; 
+    margin-left: -3.5vw;
+    margin-right: 3.5vw;
+    color: white;
+}
+
+.downloadarea{
+    border: solid;
+    border-radius: 25px;
+    color: white;
+}
+
+.input{
+    display: none;
+}
+
+.button-upload, .button-send, .button-download{
+    font-size: 24px;
+}
+
+.button-upload:hover, .button-download:hover, .button-send:hover{
+    color: yellow;
+}
+
+.sendbutton{
+    display: none;
+}
+
+.hidden-div{
+    display: none;
+}
+

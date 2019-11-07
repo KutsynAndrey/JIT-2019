@@ -46,3 +46,15 @@ html{
   color: white;
   transform: translateY(-7px);
 }
+
+.inscription{
+    font-family: proxima-nova, sans-serif;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 12vh;
+    margin-top: -93vh;
+    margin-left: 35vw;
+    color: aliceblue;
+    /*
+    text-shadow: 1px 1px 1px black, 0 0 5em white;
+}

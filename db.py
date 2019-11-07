@@ -7,7 +7,7 @@ from functional import time_now, validation_csv, fill_session_by_valid_code, val
 from algorithm import algorithm
 
 
-engine = create_engine("mysql+mysqlconnector://ollegg:sqlollegg@localhost/JIT")
+engine = create_engine("mysql+mysqlconnector://user:Dgk.cf[ytn,eleotuj@localhost/JIT")
 metadata = MetaData()
 Session = sessionmaker(bind=engine)
 

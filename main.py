@@ -3,7 +3,9 @@ from flask import render_template, session, request, redirect, send_file, send_f
 from db import Session
 from db import set_query, set_user, get_user, get_queries, get_coord, get_query, get_polygon_coords, get_path_coords
 from functional import clear_errors, init_session
-from photo_processing.functional import photo_page_solution
+from TLogParser import csv_parser
+from photo_processing.functional import photo_page_solution, clear_folder, save_img_list, load_img_list
+from photo_processing.mapper import MapCreator
 from cv2 import imwrite
 import datetime
 
@@ -78,19 +80,48 @@ def img_processing():
         images = request.files.getlist("improve-quality")
         images2 = request.files.getlist("sort-quality")
         image = request.files["AI-improving"]
-        print(images)
-        print(images2)
-        print(image)
+
         result = photo_page_solution(images, images2, image, session)
         name = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
-        imwrite("/home/andrey/GitFolder/JIT-2019/static/tmp-photos/" + name + '.jpeg', result[1])
+        imwrite("static/tmp-photos/" + name + '.jpeg', result[1])
     return render_template('newphotos.html', session=session, status=result[0], p_name=name)
 
 
-@app.route('/download-result', methods=['GET'])
-def img_download():
-    path = "/home/andrey/GitFolder/JIT-2019/static/tmp-photos/result.jpeg"
-    return send_file(path, as_attachment=True, attachment_filename="hi.jpeg", cache_timeout=0)
+@app.route('/map-creator', methods=['POST', 'GET'])
+def map_creator():
+    clear_errors(session)
+    if request.method == 'POST':
+        images = request.files.getlist("input")
+        addition = request.files["input-information"]
+        scale = float(request.form['scale'])
+
+        if images[0].content_type == 'application/octet-stream':
+            session['map-creator-image-error'] = True
+        elif addition.content_type == 'application/octet-stream':
+            session['map-creator-file-error'] = True
+        elif addition.content_type != "text/csv":
+            session['map-creator-format-error'] = True
+
+        clear_folder("static/tmp-photos")
+        clear_folder("static/uploads")
+        save_img_list(images)
+        img_list = load_img_list("static/tmp-photos")
+        params = csv_parser(addition)
+        result = MapCreator(img_list, params, scale=scale)
+        if result == -1:
+            session['map-creator-memory-error'] = True
+        else:
+            name = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+            imwrite("static/tmp-photos/" + name + ".jpeg", result.map)
+            session['map-ready'] = True
+            session['map-name'] = name
+    return render_template('create_map.html', session=session)
+
+
+@app.route('/download-result/<name>', methods=['GET'])
+def img_download(name):
+    path = "static/tmp-photos/" + name + ".jpeg"
+    return send_file(path, as_attachment=True, attachment_filename=name + ".jpeg", cache_timeout=0)
 
 
 if __name__ == '__main__':
