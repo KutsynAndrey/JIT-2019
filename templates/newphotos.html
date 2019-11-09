@@ -47,12 +47,6 @@
                 <p class="button-send"><i class="fas fa-file-import"></i></p>         
             </div>
         </div>
-           {% if status == 1 or status == 2 %}
-              <div class="result">
-                   <img src="../static/tmp-photos/{{ p_name }}.jpeg" class="result-img">
-              </div>
-              <a href="download-result">Завантажити фото</a>
-           {% endif %}
         <form method="post" enctype="multipart/form-data">
             <div class="inputs">
             <input type='file' class="input-1" name="improve-quality" accept="image/jpeg, image/png" multiple>
@@ -60,8 +54,11 @@
             <input type='file' class="input-3" name="AI-improving" accept="image/jpeg, image/png">
             <input type="submit" class="sendbutton">
             </div>
+            <input type="file" name="params">
         </form>
-
+        {% if  session["upgrade-task-img-name"] != None %}
+           <a href="/download-result/{{ session['upgrade-task-img-name'] }}">Завантажити результат<a>
+        {% endif %}
         </div>
      <script>
          $(document).ready(function(){
@@ -83,10 +80,18 @@
                  $(".sendbutton").trigger("click")
              });
 
-             {% if session["photos doesn't exist"] == True %}
+             {% if session["photos doesn't exist"] %}
                 alert("Оберіть фото");
-             {% elif session["choose one operation"] == True %}
+             {% elif session["choose one operation"] %}
                 alert("Оберіть один спосіб обробки фото");
+             {% elif session["params-list-doesn't-exist"] %}
+                alert("Надішліть параметри");
+             {% elif session["upgrade-task-not-a-csv"] %}
+                alert("Вказаний файл не сsv формату");
+             {% elif session["count-file-img-error"] %}
+                alert("кількість параметрів та фото не співпадає ")
+             {% elif  session["focal-len-doesnt-exist"] %}
+                alert("Фокусна выдстань не існує")
              {% endif %}
         });
      </script>

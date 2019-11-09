@@ -47,6 +47,11 @@ def init_session(session):
     session['map-creator-memory-error'] = False
     session['map-ready'] = False
     session['map-name'] = None
+    session["upgrade-task-img-name"] = None
+    session["upgrade-task-not-a-csv"] = False
+    session["params-list-doesn't-exist"] = False
+    session["count-file-img-error"] = False
+    session["focal-len-doesnt-exist"] = False
 
 
 def clear_errors(session):
@@ -82,6 +87,11 @@ def clear_errors(session):
     session['map-creator-memory-error'] = False
     session['map-ready'] = False
     session['map-name'] = None
+    session["upgrade-task-img-name"] = None
+    session["upgrade-task-not-a-csv"] = False
+    session["params-list-doesn't-exist"] = False
+    session["count-file-img-error"] = False
+    session["focal-len-doesnt-exist"] = False
 
 
 def validation_csv(file):
@@ -147,11 +157,9 @@ def validate_polygon(polygons):
             segment = (dots[ii], dots[ii+1])
             if len(last_segments) > 0:
                 for ind, seg in enumerate(last_segments):
-                    print("LEN", len(last_segments))
                     if ii - ind == 1:
                         break
                     if intersect_segments(seg[0], seg[1], segment[0], segment[1]):
-                        print("INTERSECTION in", seg[0], seg[1], segment[0], segment[1])
                         return 2, index
             last_segments.append(segment)
 

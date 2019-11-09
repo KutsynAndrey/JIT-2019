@@ -3,8 +3,9 @@ from flask import render_template, session, request, redirect, send_file, send_f
 from db import Session
 from db import set_query, set_user, get_user, get_queries, get_coord, get_query, get_polygon_coords, get_path_coords
 from functional import clear_errors, init_session
-from TLogParser import csv_parser
-from photo_processing.functional import photo_page_solution, clear_folder, save_img_list, load_img_list
+from TLogParser import csv_parser, is_tlog, parser
+from photo_processing.functional import clear_folder, save_img_list, load_img_list
+from photo_processing.upgrade_qual import photo_page_solution
 from photo_processing.mapper import MapCreator
 from cv2 import imwrite
 import datetime
@@ -80,11 +81,15 @@ def img_processing():
         images = request.files.getlist("improve-quality")
         images2 = request.files.getlist("sort-quality")
         image = request.files["AI-improving"]
-
-        result = photo_page_solution(images, images2, image, session)
-        name = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
-        imwrite("static/tmp-photos/" + name + '.jpeg', result[1])
-    return render_template('newphotos.html', session=session, status=result[0], p_name=name)
+        params_file = request.files["params"]
+        status, result = photo_page_solution(images, images2, image, params_file, session)
+        if status:
+            pass
+        else:
+            name = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+            imwrite("static/tmp-photos/" + name + '.JPG', result)
+            session["upgrade-task-img-name"] = name
+    return render_template('newphotos.html', session=session, p_name=name)
 
 
 @app.route('/map-creator', methods=['POST', 'GET'])
@@ -97,31 +102,52 @@ def map_creator():
 
         if images[0].content_type == 'application/octet-stream':
             session['map-creator-image-error'] = True
-        elif addition.content_type == 'application/octet-stream':
+        elif addition.content_type == 'application/octet-stream' and not is_tlog(addition.filename):
             session['map-creator-file-error'] = True
-        elif addition.content_type != "text/csv":
+        elif addition.content_type != "text/csv" and not is_tlog(addition.filename):
             session['map-creator-format-error'] = True
+        elif addition.content_type == "text/csv":
+            clear_folder("static/tmp-photos")
+            clear_folder("static/uploads")
+            save_img_list(images)
+            img_list = load_img_list("static/tmp-photos")
+            params = csv_parser(addition)
+            result = MapCreator(img_list, params, scale=scale)
+            print("TYPE", type(result))
+            if result == -1:
+                session['map-creator-memory-error'] = True
+            else:
+                name = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+                imwrite("static/tmp-photos/" + name + ".JPG", result.map)
+                session['map-ready'] = True
+                session['map-name'] = name
 
-        clear_folder("static/tmp-photos")
-        clear_folder("static/uploads")
-        save_img_list(images)
-        img_list = load_img_list("static/tmp-photos")
-        params = csv_parser(addition)
-        result = MapCreator(img_list, params, scale=scale)
-        if result == -1:
-            session['map-creator-memory-error'] = True
-        else:
-            name = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
-            imwrite("static/tmp-photos/" + name + ".jpeg", result.map)
-            session['map-ready'] = True
-            session['map-name'] = name
+        elif is_tlog(addition.filename):
+            clear_folder("static/tmp-photos")
+            clear_folder("static/uploads")
+            save_img_list(images)
+            print("SAVED")
+            img_list = load_img_list("static/tmp-photos")
+            print("LOADED")
+            status, params = parser(addition)
+            print("PARAMS")
+            result = MapCreator(img_list, params, scale=scale)
+            print("TYPE", type(result))
+            if result == -1:
+                session['map-creator-memory-error'] = True
+            else:
+                name = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+                imwrite("static/tmp-photos/" + name + ".JPG", result.map)
+                session['map-ready'] = True
+                session['map-name'] = name
+
     return render_template('create_map.html', session=session)
 
 
 @app.route('/download-result/<name>', methods=['GET'])
 def img_download(name):
-    path = "static/tmp-photos/" + name + ".jpeg"
-    return send_file(path, as_attachment=True, attachment_filename=name + ".jpeg", cache_timeout=0)
+    path = "static/tmp-photos/" + name + ".JPG"
+    return send_file(path, as_attachment=True, attachment_filename=name + ".JPG", cache_timeout=0)
 
 
 if __name__ == '__main__':
