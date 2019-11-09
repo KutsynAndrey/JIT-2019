@@ -25,35 +25,35 @@
                 <form class="form" method="post" enctype="multipart/form-data">
                     <div class='div'>
                         <label class="label">Фокусна відстань (мм)</label><br>
-                        <input class="input" type="text" name="focal_length" value='50' placeholder="Наприклад, 30" required>
+                        <input class="input" type="text" name="focal_length" value='50' placeholder="Наприклад, 30" pattern="[1-9][0-9]+$" required>
                     </div>
                     <div class='div'>
                         <label class="label">Допустима висота польоту (м)</label><br>
-                        <input class="input" type="text" name="fly_height" value='1000' placeholder="Наприклад, 1000" required>
+                        <input class="input" type="text" name="fly_height" value='1000' placeholder="Наприклад, 1000" pattern="[1-9][0-9]+$" required>
                     </div>
                     <div class='div'>
                         <label class="label">Висота фотосенсора (мм)</label><br>
-                        <input class="input" type="text" name="ps_height" value='24' placeholder="Наприклад, 100" required>
+                        <input class="input" type="text" name="ps_height" value='24' placeholder="Наприклад, 100" pattern="[1-9][0-9]+$" required>
                     </div>
                     <div class='div'>
                         <label class="label">Ширина фотосенсора (мм)</label><br>
-                        <input class="input" type="text" name="ps_width" value='36' placeholder="Наприклад, 100" required>
+                        <input class="input" type="text" name="ps_width" value='36' placeholder="Наприклад, 100" pattern="[1-9][0-9]+$" required>
                     </div>
                     <div class='div'>
                         <label class="label">Ємність батареї дрона (Ah)</label><br>
-                        <input class="input" type="text" name="battery_capacity" value='2000' placeholder="Наприклад, 1000" required>
+                        <input class="input" type="text" name="battery_capacity" value='2000' placeholder="Наприклад, 1000" pattern="[1-9][0-9]+$" required>
                     </div>
                     <div class='div'>
                         <label class="label">Витрати заряду на фото (A)</label><br>
-                        <input class="input" type="text" name="photo_loss" value='6' placeholder="Наприклад, 10" required>
+                        <input class="input" type="text" name="photo_loss" value='6' placeholder="Наприклад, 10" pattern="[1-9][0-9]+$" required>
                     </div>
                     <div class='div'>
                         <label class="label">Витрати заряду на політ (A)</label><br>
-                        <input class="input" type="text" name="fly_loss" value='10' placeholder="Наприклад, 1000" required>
+                        <input class="input" type="text" name="fly_loss" value='10' placeholder="Наприклад, 1000" pattern="[1-9][0-9]+$" required>
                     </div>
                     <div class='div'>
                         <label class="label">Швидкість дрона (кілометр/година)</label><br>
-                        <input class="input" type="text" name="fly_speed" value='20' placeholder="Наприклад, 20" required>
+                        <input class="input" type="text" name="fly_speed" value='20' placeholder="Наприклад, 20" pattern="[1-9][0-9]+$" required>
                     </div>
                     <div class='div'>
                         <button class="button" type="submit" id='submit'>Відправити</button>
