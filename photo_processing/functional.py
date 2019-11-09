@@ -5,10 +5,8 @@ import os
 
 
 def show_var(img1, img2):
-    cv2.imshow("1", img1)
-    cv2.imshow("2", img2)
-    print("1 -", cv2.Laplacian(img1, cv2.CV_64F).var())
-    print("2 -", cv2.Laplacian(img2, cv2.CV_64F).var())
+    #cv2.imshow("1", img1)
+    #cv2.imshow("2", img2)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -51,7 +49,6 @@ def flv_builder(img_list, kernel_size, step):
     h_map, w_map = int((height - kernel_size) / step + 1), int((width - kernel_size) / step + 1)
     count = len(img_list)
     flv_list = []
-    print("Foo", "h_map", h_map, "w_map", w_map, "count", count)
     result_matrix = [[None for i in range(w_map)] for j in range(h_map)]
 
     for img in img_list:
@@ -68,7 +65,6 @@ def flv_builder(img_list, kernel_size, step):
                     m = variance
                     index = ii
             result_matrix[h][w] = flv_list[index][h][w][0]
-            print("pick part[%s][%s] from image <%s>" % (h, w, index))
 
     return result_matrix
 
@@ -91,16 +87,12 @@ def supResStitcher(img_matrix):
     stitcher = cv2.createStitcher() if imutils.is_cv3() else cv2.Stitcher_create()
 
     stitched_rows = []
-    print("rows", len(img_matrix))
     for ii, row in enumerate(img_matrix):
-        print('start...')
         (status, stitched) = stitcher.stitch(row)
         if status == 0:
-            print(ii, "...stitched")
             stitched = rotate_image(stitched, 90)
             stitched_rows.append(stitched)
         else:
-            print("ERROR")
             return 1
 
     for i in stitched_rows:
@@ -115,8 +107,6 @@ def supResStitcher(img_matrix):
 
 def gridStitcher(img_matrix):
     rows_list = []
-    print("height -", len(img_matrix))
-    print("width -", len(img_matrix[0]))
     for row_ii in range(len(img_matrix)):
         tmp = img_matrix[row_ii][0]
         for item_ii in range(1, len(img_matrix[row_ii])):
@@ -139,13 +129,12 @@ def load_img_list(path):
 
 def save_img_list(listdir):
     for item in listdir:
-        item.save("/home/andrey/GitFolder/JIT-2019/static/tmp-photos/" + item.filename)
+        item.save("static/tmp-photos/" + item.filename)
 
 
 def clear_folder(path):
     listdir = os.listdir(path)
     for item in listdir:
-        print("clear item", item)
         os.remove(path + '/' + item)
 
 
@@ -164,15 +153,15 @@ def photo_page_solution(listdir_im, listdir_so, img_improve, session):
         session["choose one operation"] = True
         return 3, 0
     elif listdir_im[0].content_type != nothing:
-        clear_folder("/home/andrey/GitFolder/JIT-2019/static/tmp-photos")
+        clear_folder("static/tmp-photos")
         save_img_list(listdir_im)
-        imlist = load_img_list("/home/andrey/GitFolder/JIT-2019/static/tmp-photos")
+        imlist = load_img_list("static/tmp-photos")
         flv_matrix = flv_builder(imlist, 80, 80)
         result = gridStitcher(flv_matrix)
         return 1, result
     else:
-        clear_folder("/home/andrey/GitFolder/JIT-2019/static/tmp-photos")
+        clear_folder("static/tmp-photos")
         save_img_list(listdir_so)
-        imlist = load_img_list("/home/andrey/GitFolder/JIT-2019/static/tmp-photos")
+        imlist = load_img_list("static/tmp-photos")
         result = sort_by_var(imlist)
         return 2, result

@@ -41,6 +41,12 @@ def init_session(session):
     session["start-point-doesn't-exist"] = False
     session["choose one operation"] = False
     session["photos doesn't exist"] = False
+    session['map-creator-image-error'] = False
+    session['map-creator-file-error'] = False
+    session['map-creator-format-error'] = False
+    session['map-creator-memory-error'] = False
+    session['map-ready'] = False
+    session['map-name'] = None
 
 
 def clear_errors(session):
@@ -70,6 +76,12 @@ def clear_errors(session):
     session["start-point-doesn't-exist"] = False
     session["choose one operation"] = False
     session["photos doesn't exist"] = False
+    session['map-creator-image-error'] = False
+    session['map-creator-file-error'] = False
+    session['map-creator-format-error'] = False
+    session['map-creator-memory-error'] = False
+    session['map-ready'] = False
+    session['map-name'] = None
 
 
 def validation_csv(file):
