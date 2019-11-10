@@ -52,7 +52,7 @@ def init_session(session):
     session["params-list-doesn't-exist"] = False
     session["count-file-img-error"] = False
     session["focal-len-doesnt-exist"] = False
-
+    session['watering-photo-error'] = False
 
 def clear_errors(session):
     session['Wrong_nickname'] = False
@@ -92,6 +92,9 @@ def clear_errors(session):
     session["params-list-doesn't-exist"] = False
     session["count-file-img-error"] = False
     session["focal-len-doesnt-exist"] = False
+    session['watering-photo-error'] = False
+    session['watering-ready'] = False
+    session['watering-name'] = None
 
 
 def validation_csv(file):
