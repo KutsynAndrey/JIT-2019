@@ -7,6 +7,7 @@ from TLogParser import csv_parser, is_tlog, parser
 from photo_processing.functional import clear_folder, save_img_list, load_img_list
 from photo_processing.upgrade_qual import photo_page_solution
 from photo_processing.mapper import MapCreator
+from photo_processing.water import watering
 from cv2 import imwrite
 import datetime
 
@@ -149,6 +150,37 @@ def img_download(name):
     path = "static/tmp-photos/" + name + ".JPG"
     return send_file(path, as_attachment=True, attachment_filename=name + ".JPG", cache_timeout=0)
 
+
+@app.route('/watering', methods=['GET', 'POST'])
+def water_advices():
+    clear_errors(session)
+    if request.method == 'POST':
+
+        if request.files['input'].content_type == "application/octet-stream":
+            session['watering-photo-error'] = True
+        else:
+            clear_folder("static/tmp-photos")
+            save_img_list([request.files['input']])
+
+            img = load_img_list('static/tmp-photos')[0]
+            max_H = int(request.form['max-H'])
+            min_H = int(request.form['min-H'])
+
+            result = watering(img, min_H, max_H)
+            print("TYPE RESULT", type(result))
+            name = datetime.datetime.now().strftime("%m%d%Y%H%M%S")
+            imwrite("static/tmp-photos/" + name + ".JPG", result)
+            session['watering-ready'] = True
+            session['watering-name'] = name
+
+
+
+    return render_template('watering.html', session=session)
+
+
+@app.route("/watering", methods=['GET', 'POST'])
+def moving_objects():
+    pass
 
 if __name__ == '__main__':
     app.run(debug=False, host='0.0.0.0')

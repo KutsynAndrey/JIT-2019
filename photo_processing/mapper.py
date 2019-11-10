@@ -361,10 +361,6 @@ def MapCreator(img_list, params_list, scale=1.0, ppm='min', update_blur=False, s
         mPPMx = PPM['minX']
         mPPMy = PPM['minY']
         for ii, drimg in enumerate(dr_list):
-            if ii == 0:
-                cv2.imshow("test", drimg.photo)
-                cv2.waitKey(0)
-                cv2.destroyAllWindows()
             drimg.change_ppmX(mPPMx)
             drimg.change_ppmY(mPPMy)
             if drimg.photo.shape[0] < 10 or drimg.photo.shape[1] < 10:
