@@ -25,7 +25,7 @@ def watering(img, minH = 40, maxH = 140):
 
 	# define criteria, number of clusters(K) and apply kmeans()
 	criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 10, 1.0)
-	K = 4
+	K = 2
 
 	result = 0
 
