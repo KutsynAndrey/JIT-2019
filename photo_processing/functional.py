@@ -2,6 +2,8 @@ import cv2
 import numpy as np
 import imutils
 import os
+from PIL import Image
+from PIL.ExifTags import TAGS
 
 
 def show_var(img1, img2):
@@ -120,6 +122,8 @@ def gridStitcher(img_matrix):
 
 def load_img_list(path):
     listdir = os.listdir(path)
+    listdir.sort(key=lambda x: os.stat(os.path.join(path, x)).st_mtime)
+    print("LISTDIR", listdir)
     img_list = []
     for item in listdir:
         img = cv2.imread(path + '/' + item)
@@ -129,6 +133,7 @@ def load_img_list(path):
 
 def save_img_list(listdir):
     for item in listdir:
+        print("save", item.filename)
         item.save("static/tmp-photos/" + item.filename)
 
 
@@ -138,30 +143,13 @@ def clear_folder(path):
         os.remove(path + '/' + item)
 
 
-def photo_page_solution(listdir_im, listdir_so, img_improve, session):
-    nothing = 'application/octet-stream'
-    if listdir_im[0].content_type == nothing and listdir_so[0].content_type == nothing and img_improve.content_type == nothing:
-        session["photos doesn't exist"] = True
-        return 0, 0
-    elif listdir_im[0].content_type != nothing and listdir_so[0].content_type != nothing:
-        session["choose one operation"] = True
-        return 3, 0
-    elif listdir_im[0].content_type != nothing and img_improve.content_type != nothing:
-        session["choose one operation"] = True
-        return 3, 0
-    elif img_improve.content_type != nothing and listdir_so[0].content_type != nothing:
-        session["choose one operation"] = True
-        return 3, 0
-    elif listdir_im[0].content_type != nothing:
-        clear_folder("static/tmp-photos")
-        save_img_list(listdir_im)
-        imlist = load_img_list("static/tmp-photos")
-        flv_matrix = flv_builder(imlist, 80, 80)
-        result = gridStitcher(flv_matrix)
-        return 1, result
-    else:
-        clear_folder("static/tmp-photos")
-        save_img_list(listdir_so)
-        imlist = load_img_list("static/tmp-photos")
-        result = sort_by_var(imlist)
-        return 2, result
+def get_metadata(path, key):
+    status = 0
+    listdir = os.listdir(path)
+    keylist = []
+    for item in listdir:
+        print(path + "/" + item)
+        for (k, v) in Image.open(path + "/" + item)._getexif().items():
+            if TAGS.get(k) == key:
+                keylist.append(v[0]/10000)
+    return status, keylist

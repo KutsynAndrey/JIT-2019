@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        {% include 'header.html' %}
+        <meta charset="UTF-8">
+        <title>Полив поля</title>
+        <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link rel="stylesheet" href='../static/css/watering.css'>
+        <script src="https://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>
+    </head>
+    <body>
+        {% include 'nav.html' %}
+        <p align = "center">
+            <div class="text" align = "center">
+                Визначення необхідності поливу території
+            </div>
+        </p>
+        
+        <form method="post" enctype="multipart/form-data">
+            <div class="palettes">
+                <p>Оберіть колір для мінімального поливу</p>
+                <p>Оберіть колір для максимального поливу</p>
+                <div class="min-picker">
+                    <div id="min-hue-dial"></div>
+                    <div class="min-sliders">
+                        <div id="min-sat-slider"><strong>Saturation: <span></span></strong></div>
+                        <div id="min-lum-slider"><strong>Luminance: <span></span></strong></div>
+                    </div>
+                    <div class="min-color"></div>
+                </div>
+                <div class="max-picker">
+                    <div id="max-hue-dial"></div>
+                    <div class="max-sliders">
+                        <div id="max-sat-slider"><strong>Saturation: <span></span></strong></div>
+                        <div id="max-lum-slider"><strong>Luminance: <span></span></strong></div>
+                    </div>
+                    <div class="max-color"></div>
+                </div>
+            </div>
+        </form>
+        <div class="main-container">
+            <div class="uploadarea"> 
+                <div class="upload" align = "center"> 
+                    <p>Завантажити фото</p>
+                    <p class="button-upload"><i class="fas fa-upload test"></i></p>
+                </div>
+            </div>
+            <div class="sendarea">
+                <div class="send" align="center">
+                    <p>Надіслати фото</p>
+                    <p class="button-send"><i class="fas fa-file-import"></i></p>
+                </div>
+            </div>
+            <div class="downloadarea">
+                <div class="download" align="center">
+                    <p>Завантажити результат</p>
+                    <p class="button-download"><i class="fas fa-download"></i></p>         
+                </div>
+            </div>
+        </div>
+        {% if session['watering-ready'] %}
+            <a href="/download-result/{{ session['watering-name'] }}">Завантажити результат</a>
+        {% endif %}
+        <form method="post" enctype="multipart/form-data"> 
+            <div class="choose_file">
+                <input type='file' class="input" name="input" accept="image/jpeg, image/png"
+                id="imgInp">
+            </div>
+
+            <img id="blah" src="#" alt="your image" width="160" height="110"/>
+            <input type="text" id='min-H' name="min-H">
+            <input type="text" id='max-H' name="max-H">
+            <input type="submit" class="sendbutton" class="sendbutton">
+        </form>
+
+        <script>
+            var minH = document.getElementById('min-H'),
+                maxH = document.getElementById('max-H');
+
+            $(document).ready(function(){
+                console.log("READY");
+                $(".button-upload").click(function(){
+                    $(".input").trigger("click")
+                });
+                
+                $(".button-send").click(function(){
+                    $(".sendbutton").trigger("click")
+                });
+            });
+    
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        $('#blah').attr('src', e.target.result);
+                        console.log("YA");
+                        $('#blah').css('display', 'block');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+
+            $("#imgInp").change(function() {
+                readURL(this);
+            });
+
+            YUI().use('dial', 'slider', 'event-valuechange', 'color', function (Y) {
+                Y.one('.min-picker').addClass('yui3-skin-sam');
+
+                var hue = new Y.Dial({
+                        min: 0,
+                        max: 360,
+                        stepsPerRevolution: 360,
+                        continuous: true,
+                        centerButtonDiameter: 0.4,
+                        render: '#min-hue-dial'
+                    }),
+                    sat = new Y.Slider({
+                        min: 0,
+                        max: 100,
+                        value: 100,
+                        render: '#min-sat-slider'
+                    }),
+                    lum = new Y.Slider({
+                        min: 0,
+                        max: 100,
+                        value: 50,
+                        render: '#min-lum-slider'
+                    }),
+                    satValue = Y.one('#min-sat-slider span'),
+                    lumValue = Y.one('#min-lum-slider span'),
+                    color = Y.one('.min-color');
+
+                hue.after('valueChange', function(e) {
+                    updatePickerUI();
+                });
+
+                function setPickerUI(hsl) {
+                    if (typeof hsl.h !== 'undefined') {
+                        hue.set('value', + hsl.h);
+                    }
+                    if (typeof hsl.s !== 'undefined') {
+                        sat.set('value', + hsl.s);
+                    }
+                    if (typeof hsl.l !== 'undefined') {
+                        lum.set('value', + hsl.l);
+                    }
+                }
+
+                function updatePickerUI() {
+                    var h = hue.get('value'),
+                        s = sat.get('value'),
+                        l = lum.get('value'),
+                        hslString = Y.Color.fromArray([h, s, l], Y.Color.TYPES.HSL),
+                        hexString = Y.Color.toHex(hslString);
+
+                    minH.value = h;
+                    console.log("MIN H:", h);
+                    console.log('MIN H value:', minH.value);
+                    satValue.set('text', s + '%');
+                    lumValue.set('text', l + '%');
+                    color.setStyle('backgroundColor', hexString);
+                }
+
+                updatePickerUI();
+            });
+            
+            YUI().use('dial', 'slider', 'event-valuechange', 'color', function (Y) {
+                Y.one('.max-picker').addClass('yui3-skin-sam');
+
+                var hue = new Y.Dial({
+                        min: 0,
+                        max: 360,
+                        stepsPerRevolution: 360,
+                        continuous: true,
+                        centerButtonDiameter: 0.4,
+                        render: '#max-hue-dial'
+                    }),
+                    sat = new Y.Slider({
+                        min: 0,
+                        max: 100,
+                        value: 100,
+                        render: '#max-sat-slider'
+                    }),
+                    lum = new Y.Slider({
+                        min: 0,
+                        max: 100,
+                        value: 50,
+                        render: '#max-lum-slider'
+                    }),
+                    satValue = Y.one('#max-sat-slider span'),
+                    lumValue = Y.one('#max-lum-slider span'),
+                    color = Y.one('.max-color');
+
+                hue.after('valueChange', function(e) {
+                    updatePickerUI();
+                });
+
+                function setPickerUI(hsl) {
+                    if (typeof hsl.h !== 'undefined') {
+                        hue.set('value', + hsl.h);
+                    }
+                    if (typeof hsl.s !== 'undefined') {
+                        sat.set('value', + hsl.s);
+                    }
+                    if (typeof hsl.l !== 'undefined') {
+                        lum.set('value', + hsl.l);
+                    }
+                }
+
+                function updatePickerUI() {
+                    var h = hue.get('value'),
+                        s = sat.get('value'),
+                        l = lum.get('value'),
+                        hslString = Y.Color.fromArray([h, s, l], Y.Color.TYPES.HSL),
+                        hexString = Y.Color.toHex(hslString);
+
+                    maxH.value = h;
+                    console.log("MAX H:", h);
+                    console.log('MAX H value:', maxH.value);
+                    satValue.set('text', s + '%');
+                    lumValue.set('text', l + '%');
+                    color.setStyle('backgroundColor', hexString);
+                }
+
+                updatePickerUI();
+            });
+            
+            {% if session['watering-photo-error'] %}
+                alert("Виберіть фото")            
+            {% endif %}
+        </script>
+    </body>
+</html>

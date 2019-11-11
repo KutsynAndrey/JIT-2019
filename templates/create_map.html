@@ -77,7 +77,15 @@
             });
             {% if session["map-creator-memory-error"] %}
                 alert("Не выстачає місця, змініть масштаб")
+            {% elif session['map-creator-file-error'] %}
+                alert("Файл не існує")
+            {% elif session['map-creator-image-error'] %}
+                alert("Відправте зображення")
+            {% elif session['map-creator-format-error'] %}
+                alert("Данний формат файлу не підтримується")
+
             {% endif %}
+
          </script>
     </body>
 </html>

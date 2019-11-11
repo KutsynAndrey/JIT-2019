@@ -1,10 +1,10 @@
 import numpy as np
 import cv2
 import math
+from photo_processing.functional import flv_builder, gridStitcher
 
 
 def crop_polygon(points, img):
-    print(points, points.shape, type(points))
     rect = cv2.boundingRect(points)
     x, y, w, h = rect
     crop = img[y:y + h, x:x + w].copy()
@@ -15,7 +15,7 @@ def crop_polygon(points, img):
     cv2.drawContours(mask, [points], -1, (255, 255, 255), -1, cv2.LINE_AA)
 
     dst = cv2.bitwise_and(crop, crop, mask=mask)
-    return dst
+    return dst, x, y, w, h
 
 
 def fill_polygon(points, img, color):
@@ -127,12 +127,21 @@ class DrPhoto:
 
     def change_ppmX(self, ppm):
         sc = ppm / self.ppmX
-        self.photo = cv2.resize(self.photo, None, fx=sc, fy=1.0)
+
+        print("sc x", sc)
+        try:
+            self.photo = cv2.resize(self.photo, None, fx=sc, fy=1.0)
+        except cv2.error:
+            self.photo = np.zeros((5, 5))
         self.ppmX = ppm
 
     def change_ppmY(self, ppm):
         sc = ppm / self.ppmY
-        self.photo = cv2.resize(self.photo, None, fx=1.0, fy=sc)
+        print("sc y", sc)
+        try:
+            self.photo = cv2.resize(self.photo, None, fx=1.0, fy=sc)
+        except cv2.error:
+            self.photo = np.zeros((5, 5))
         self.ppmY = ppm
 
     def calcRealCoord(self):
@@ -225,18 +234,43 @@ class Map:
         h = int(round(maxY * ppmY) + 1)
         w = int(round(maxX * ppmX) + 1)
         self.error = False
-        print("D", h, w)
         try:
+            print("MAP SHAPE", h, w)
             self.map = np.zeros((h, w, 3), dtype=np.uint8)
             self.map_copy = np.zeros((h, w, 3), dtype=np.uint8)
         except MemoryError:
+            print("BUY memory ")
             self.error = True
         self.ppmX = ppmX
         self.ppmY = ppmY
 
+    def crop_part(self, w, h, rx, ry):
+        mh, mw = self.map.shape[:2]
+        px, py = round((rx + self.moveX) * self.ppmX), round((ry + self.moveY) * self.ppmY)
+        py = mh - py
+
+        h_min = int(py - h // 2)
+        h_max = int(py + h // 2)
+        w_min = int(px - w // 2)
+        w_max = int(px + w // 2)
+
+        if h_min < 0:
+            h_min = 0
+        if w_min < 0:
+            w_min = 0
+        if h_max > self.map.shape[0]:
+            h_max = self.map.shape[0]
+        if w_max > self.map.shape[1]:
+            w_max = self.map.shape[1]
+        print("crop", "[", h_min, h_max, "]", "[", w_min, w_max, "]")
+        area = self.map[h_min:h_max, w_min:w_max]
+
+        return area
+
     def add_image(self, img, rx, ry, copy=False):
         h, w = img.shape[:2]
         mh, mw = self.map.shape[:2]
+
         px, py = round((rx + self.moveX) * self.ppmX), round((ry + self.moveY) * self.ppmY)
         py = mh - py
 
@@ -255,7 +289,6 @@ class Map:
             w_max = self.map.shape[1]
 
         area = self.map[h_min:h_max, w_min:w_max]
-
         if area.shape != img.shape:
             # print("reshape from", img.shape, "to", area.shape)
             img = cv2.resize(img.copy(), (area.shape[1], area.shape[0]))
@@ -264,7 +297,7 @@ class Map:
         else:
             self.map[h_min:h_max, w_min:w_max] = np.where(img != [0, 0, 0], img, area)
 
-    def check_intersecting(self, dri_n, dri2):
+    def check_intersecting(self, dri_n, dri2, fragmentation=False):
 
         h, w = self.map.shape[:2]
         answer = self.map_copy
@@ -286,42 +319,53 @@ class Map:
 
         intersect_poly = clip([nRB, nRT, nLT, nLB], [RB2, RT2, LT2, LB2])
 
-        print("list intersect", intersect_poly)
         if len(intersect_poly):
 
             for i in range(len(intersect_poly)):
                 intersect_poly[i][0] = (intersect_poly[i][0] + self.moveX) * self.ppmX
                 intersect_poly[i][1] = h - (intersect_poly[i][1] + self.moveY) * self.ppmY
 
-            old_poly = crop_polygon(np.array(intersect_poly).astype("int32"), self.map)
-            new_poly = crop_polygon(np.array(intersect_poly).astype("int32"), self.map_copy)
+            old_poly, ox, oy, ow, oh = crop_polygon(np.array(intersect_poly).astype("int32"), self.map)
+            new_poly, nx, ny, nw, nh = crop_polygon(np.array(intersect_poly).astype("int32"), self.map_copy)
 
-            old_blur_rate = cv2.Laplacian(old_poly, cv2.CV_64F).var()
-            new_blur_rate = cv2.Laplacian(new_poly, cv2.CV_64F).var()
-            print("RATE", old_blur_rate, new_blur_rate)
-            if old_blur_rate > new_blur_rate:
-                print("OLD THE BEST")
-                dri_n.photo = fill_polygon(np.array(intersect_poly).astype("int32"), answer, (0, 0, 0))
-                dri_n.photo = crop_polygon(np.array(norm_points).astype("int32"), dri_n.photo)
+            if fragmentation:
+                frag_list = [old_poly, new_poly]
+                flv_matrix = flv_builder(frag_list, 20, 20)
+                result_poly = gridStitcher(flv_matrix)
+                if oh > result_poly.shape[0] or ow > result_poly.shape[1]:
+                    oh = result_poly.shape[0]
+                    ow = result_poly.shape[1]
+                answer[oy:oy+oh, ox:ox+ow] = result_poly
+                dri_n.photo, _, _, _, _ = crop_polygon(np.array(norm_points).astype("int32"), answer)
+            else:
+                old_blur_rate = cv2.Laplacian(old_poly, cv2.CV_64F).var()
+                new_blur_rate = cv2.Laplacian(new_poly, cv2.CV_64F).var()
+                if old_blur_rate > new_blur_rate:
+                    dri_n.photo = fill_polygon(np.array(intersect_poly).astype("int32"), answer, (0, 0, 0))
+                    dri_n.photo, _, _, _, _ = crop_polygon(np.array(norm_points).astype("int32"), dri_n.photo)
+
         return dri_n
 
 
-def MapCreator(img_list, params_list, scale=1.0, ppm='min', update_blur=False):
+def MapCreator(img_list, params_list, scale=1.0, ppm='min', update_blur=False, s_img=False, fr=False):
+
     new_list = []
     for img in img_list:
         img = cv2.resize(img, None, fx=scale, fy=scale)
         new_list.append(img)
 
     dr_list, maxX, minX, maxY, minY, PPM = DrList(new_list, params_list)
-    MAP = None
 
+    MAP = None
     if ppm == 'min':
         mPPMx = PPM['minX']
         mPPMy = PPM['minY']
         for ii, drimg in enumerate(dr_list):
             drimg.change_ppmX(mPPMx)
             drimg.change_ppmY(mPPMy)
-
+            if drimg.photo.shape[0] < 10 or drimg.photo.shape[1] < 10:
+                dr_list.remove(drimg)
+                
         MAP = Map(maxX, minX, maxY, minY, mPPMx, mPPMy)
 
     elif ppm == 'max':
@@ -330,6 +374,8 @@ def MapCreator(img_list, params_list, scale=1.0, ppm='min', update_blur=False):
         for ii, drimg in enumerate(dr_list):
             drimg.change_ppmX(mPPMx)
             drimg.change_ppmY(mPPMy)
+            if drimg.photo.shape[0] < 10 or drimg.photo.shape[1] < 10:
+                dr_list.remove(drimg)
 
         MAP = Map(maxX, minX, maxY, minY, mPPMx, mPPMy)
 
@@ -340,10 +386,14 @@ def MapCreator(img_list, params_list, scale=1.0, ppm='min', update_blur=False):
         if update_blur:
             MAP.add_image(drimg.photo, drimg.Rcenter[0], drimg.Rcenter[1], True)
             for i in range(ii - 1, -1, -1):
-                print("check_intersecting", ii, i)
-                drimg = MAP.check_intersecting(drimg, dr_list[i])
-
+                drimg = MAP.check_intersecting(drimg, dr_list[i], fragmentation=fr)
         MAP.add_image(drimg.photo, drimg.Rcenter[0], drimg.Rcenter[1])
+
+    if s_img:
+        rx, ry = dr_list[0].Rcenter
+        h, w = dr_list[0].photo.shape[:2]
+        return MAP.crop_part(w, h, rx, ry)
     return MAP
+
 
 

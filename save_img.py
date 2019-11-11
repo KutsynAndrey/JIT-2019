@@ -43,4 +43,4 @@ def save_img(H = 1000, centers = [[-77.0397, 38.8974]]):
 		with open(file_name, 'wb') as out_file:
 			shutil.copyfileobj(save_file.raw, out_file)
 
-# save_img(1000, [[-91.87514029, 42.74966216]])
+# save_img(1000, [[-77.03968,38.89744]])
