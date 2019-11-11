@@ -178,10 +178,16 @@ def water_advices():
     return render_template('watering.html', session=session)
 
 
-@app.route("/watering", methods=['GET', 'POST'])
+@app.route("/moving-objects", methods=['GET', 'POST'])
 def moving_objects():
-    pass
+    clear_errors(session)
+
+    if request.method == "POST":
+        pass
+
+    return render_template("moving_objects.html", session=session)
+
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
 
