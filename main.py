@@ -8,6 +8,7 @@ from photo_processing.functional import clear_folder, save_img_list, load_img_li
 from photo_processing.upgrade_qual import photo_page_solution
 from photo_processing.mapper import MapCreator
 from photo_processing.water import watering
+from photo_processing.obj_detection import obj_detection
 from cv2 import imwrite
 import datetime
 
@@ -161,10 +162,12 @@ def water_advices():
         else:
             clear_folder("static/tmp-photos")
             save_img_list([request.files['input']])
+            print("PATH:", request.files['input'])
 
             img = load_img_list('static/tmp-photos')[0]
             max_H = int(request.form['max-H'])
             min_H = int(request.form['min-H'])
+            print("SERVER DATA:", min_H, max_H)
 
             result = watering(img, min_H, max_H)
             print("TYPE RESULT", type(result))
@@ -173,21 +176,32 @@ def water_advices():
             session['watering-ready'] = True
             session['watering-name'] = name
 
-
-
     return render_template('watering.html', session=session)
 
 
 @app.route("/moving-objects", methods=['GET', 'POST'])
 def moving_objects():
     clear_errors(session)
+    if request.method == 'POST':
+        if request.files['input1'].content_type == "application/octet-stream":
+            session['obj-detection-photo-error'] = True
+        else:
+            clear_folder("static/tmp-photos")
+            save_img_list([request.files['input1'], request.files['input2']])
 
-    if request.method == "POST":
-        pass
+            images = load_img_list('static/tmp-photos')[:2]
 
-    return render_template("moving_objects.html", session=session)
+            result = obj_detection(images[0], images[1], int(request.form['threshold_v']))
+            print("TYPE RESULT", type(result))
+            name1 = datetime.datetime.now().strftime("%m%d%Y%H%M%S") + "1"
+            name2 = datetime.datetime.now().strftime("%m%d%Y%H%M%S") + "2"
+            imwrite("static/tmp-photos/" + name1 + ".JPG", result[0])
+            imwrite("static/tmp-photos/" + name2 + ".JPG", result[1])
+            session['obj-detection-ready'] = True
+            session['obj-detection-name'] = [name1, name2]
+
+    return render_template('obj_detection.html', session=session)
 
 
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')
-

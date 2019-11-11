@@ -6,7 +6,7 @@ body {
 
 .main-container{
     color: aliceblue;
-    margin-top: 19vh;
+    margin-top: 20vh;
     margin-left: 18vw;
     display: grid;
     grid-template-columns: 23vw 23vw 23vw;

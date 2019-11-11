@@ -1,23 +1,24 @@
 import numpy as np
 import cv2
 
-
 def watering(img, minH = 40, maxH = 140):
-	minH, maxH = minH / 2., maxH / 2.
+	minH, maxH = maxH / 2., minH / 2.
 	upper = np.array([minH], np.float32)
 	lower = np.array([maxH], np.float32)
-	legendH, legendV = 115, 255
+	legendH, legendV = 104, 255
 
 	if img.shape[0] > 600 and img.shape[1] > 800:
 		img = cv2.resize(img, (800, 600))
-
 
 	hsv = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
 	h, s, v = cv2.split(hsv)
 	h[h < minH] = 0
 	h[h > maxH] = 0
+
 	# convert to np.float32
 	Z = h.flatten()
+	print(Z.shape)
+
 	# convert to np.float32
 	Z = np.float32(Z)
 
@@ -55,12 +56,12 @@ def watering(img, minH = 40, maxH = 140):
 			else:
 				mask = np.array(mask, np.uint8)
 				mask[mask != 0] = 255
+
 			im = cv2.bitwise_and(h, h, mask = mask)
 			maskSum = np.sum(mask) / 255
 			S = np.sum(im)
 			if maskSum != 0:
 				mean = S / maskSum
-				print('MEAN:', mean)
 				if mean == 0:
 					procent = 0
 				else:
@@ -72,6 +73,7 @@ def watering(img, minH = 40, maxH = 140):
 				ans[mask != 0] = (legendH, procent * 2.55, legendV)
 
 			if maskSum < pixels / 50.:
+				print('MASKSUM:', maskSum, 'PIXELS:', pixels)
 				flag = 1
 
 		if flag:
@@ -79,6 +81,7 @@ def watering(img, minH = 40, maxH = 140):
 
 		K += 1
 
+	print(K)
 	ans = ans.astype('uint8')
 	ans = cv2.cvtColor(ans, cv2.COLOR_HSV2BGR)
 
