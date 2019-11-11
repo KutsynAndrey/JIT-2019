@@ -117,6 +117,13 @@ def map_creator():
             session['map-name'] = name
     return render_template('create_map.html', session=session)
 
+@app.route('/obj-detection', methods=['POST', 'GET'])
+def obj_detection():
+    clear_errors(session)
+    if request.method == 'POST':
+        pass
+    return render_template('obj_detection.html', session=session)
+
 
 @app.route('/download-result/<name>', methods=['GET'])
 def img_download(name):
@@ -125,5 +132,5 @@ def img_download(name):
 
 
 if __name__ == '__main__':
-    app.run(debug=False, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')
 

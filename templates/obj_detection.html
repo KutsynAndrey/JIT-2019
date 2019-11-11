@@ -1,0 +1,95 @@
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Визначення змін</title>
+        {% include 'header.html' %}
+        <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
+        <link href="https://fonts.googleapis.com/css?family=PT+Sans&display=swap" rel="stylesheet">
+        <script src="https://kit.fontawesome.com/999afff8dc.js" crossorigin="anonymous"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+        <link href='../static/css/obj_detection.css' rel='stylesheet'>
+    </head>
+        
+    <body>
+    	{% include 'nav.html' %}
+        <div class="text" align = "center">Визначення змін та рухомих об'єктів на фото</div>
+    
+        <div class='threshold'>
+            <p>Трешхолд:
+                <p id='threshold_value'></p>
+                <div class="slidecontainer">
+                    <input type="range" min="1" max="255" value="1" class="slider" id="myRange">
+                </div>
+            </p>
+            <p>Більший трешхолд прибирає більшу частину побічного шуму, тож чим він більший, тим чіткішим є виділення нових та зниклих об'єктів.</p>
+        </div>
+        <div class="main-container">
+            <div class="uploadarea">    
+                <div class="upload" align = "center"> 
+                    <p>Фото першого проходу</p>
+                    <p class="button-upload"><i class="fas fa-upload test"></i><i class="fas fa-check check_b1"></i></p>
+                </div>
+            </div>
+            <div class="uploadarea2">    
+                <div class="upload" align = "center"> 
+                    <p>Фото другого проходу</p>
+                    <p class="button-upload"><i class="fas fa-upload test2"></i><i class="fas fa-check check_b2"></i></p>
+                </div>
+            </div>
+            <div class="sendarea">
+                <div class="send" align="center">
+                    <p>Надіслати фото</p>
+                    <p class="button-send"><i class="fas fa-file-import"></i></p>         
+                </div>
+            </div>
+            <div class="downloadarea">
+                <div class="download" align="center">
+                    <p>Завантажити результат</p>
+                    <p class="button-download"><i class="fas fa-download"></i></p>         
+                </div>
+            </div>
+        </div>
+        <img src='test0.jpg' style="display: none;">
+
+        <form method="post" enctype="multipart/form-data" style="display: none;">
+            <input type='file' class="input" name="input" accept="image/jpeg, image/png" multiple> 
+            <input type='file' class="input2" name="input" accept="image/jpeg, image/png" multiple> 
+            <input type="submit" class="sendbutton">
+        </form>
+        <script>
+            $(document).ready(function(){
+                console.log("READY");
+                 
+                $(".test").click(function(){
+                    $(".input").trigger("click")
+                });
+                 
+                $(".test2").click(function(){
+                    $(".input2").trigger("click")
+                });
+                 
+                $(".button-send").click(function(){
+                    $(".inputs").trigger("click")
+                });
+                 
+                $(".input").change(function() {
+                    $('.check_b1').css('display', 'inline-block');
+                });
+                 
+                $(".input2").change(function() {
+                    $('.check_b2').css('display', 'inline-block');
+                });
+            });
+
+            var slider = document.getElementById("myRange");
+                output = document.getElementById("threshold_value");
+            output.innerHTML = slider.value; // Display the default slider value
+
+            // Update the current slider value (each time you drag the slider handle)
+            slider.oninput = function() {
+                output.innerHTML = this.value;
+            }
+        </script>
+    </body>
+</html>

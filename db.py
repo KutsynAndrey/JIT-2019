@@ -5,6 +5,7 @@ from datetime import datetime
 from validate_email import validate_email
 from functional import time_now, validation_csv, fill_session_by_valid_code, validate_polygon, size_photo
 from algorithm import algorithm
+from save_img import save_img
 
 
 engine = create_engine("mysql+mysqlconnector://ollegg:sqlollegg@localhost/JIT")
@@ -249,6 +250,8 @@ def set_query(session, params, db_session, l_files):
                 tmp_query.length_route = length_route
                 db_session.commit()
                 set_path_coords(db_session, path, query_id)
+
+                save_img(params['fly_height'], path)
             else:
                 tmp_query = db_session.query(Query).filter_by(id=query_id).first()
                 tmp_query.status = 1
@@ -318,6 +321,8 @@ def set_query(session, params, db_session, l_files):
             print(tmp_query.fly_speed)
             db_session.commit()
             set_path_coords(db_session, path, query_id)
+
+            save_img(params['fly_height'], path)
         else:
             tmp_query = db_session.query(Query).filter_by(id=query_id).first()
             tmp_query.status = 1
