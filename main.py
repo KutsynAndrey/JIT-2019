@@ -199,7 +199,7 @@ def water_advices():
             img = load_img_list('static/tmp-photos')[0]
             max_H = int(request.form['max-H'])
             min_H = int(request.form['min-H'])
-            print("SERVER DATA:", min_H, max_H)
+            # print("SERVER DATA:", min_H, max_H)
 
             result = watering(img, min_H, max_H)
             print("TYPE RESULT", type(result))

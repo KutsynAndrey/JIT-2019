@@ -5,7 +5,13 @@ from photo_processing.mapper import MapCreator
 
 def photo_page_solution(listdir_im, listdir_so, img_improve, params_file, session):
     nothing = 'application/octet-stream'
-    if listdir_im[0].content_type == nothing and listdir_so[0].content_type == nothing and img_improve.content_type == nothing:
+    if listdir_so[0].content_type != nothing:
+        clear_folder("static/tmp-photos")
+        save_img_list(listdir_so)
+        imlist = load_img_list("static/tmp-photos")
+        result = sort_by_var(imlist)
+        return 0, result
+    elif listdir_im[0].content_type == nothing and listdir_so[0].content_type == nothing and img_improve.content_type == nothing:
         session["photos doesn't exist"] = True
         return 7, 0
     elif listdir_im[0].content_type != nothing and listdir_so[0].content_type != nothing:
@@ -35,10 +41,4 @@ def photo_page_solution(listdir_im, listdir_so, img_improve, params_file, sessio
 
         imlist = load_img_list("static/tmp-photos")
         result = MapCreator(imlist, param_list, s_img=True, fr=True, update_blur=True)
-        return 0, result
-    else:
-        clear_folder("static/tmp-photos")
-        save_img_list(listdir_so)
-        imlist = load_img_list("static/tmp-photos")
-        result = sort_by_var(imlist)
         return 0, result
