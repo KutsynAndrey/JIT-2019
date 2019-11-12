@@ -5,7 +5,6 @@ from datetime import datetime
 from validate_email import validate_email
 from functional import time_now, validation_csv, fill_session_by_valid_code, validate_polygon, size_photo
 from algorithm import algorithm
-from save_img import save_img
 
 
 engine = create_engine("mysql+mysqlconnector://ollegg:sqlollegg@localhost/JIT")
