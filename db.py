@@ -251,7 +251,7 @@ def set_query(session, params, db_session, l_files):
                 db_session.commit()
                 set_path_coords(db_session, path, query_id)
 
-                save_img(params['fly_height'], path)
+                # save_img(params['fly_height'], path)
             else:
                 tmp_query = db_session.query(Query).filter_by(id=query_id).first()
                 tmp_query.status = 1
@@ -321,8 +321,8 @@ def set_query(session, params, db_session, l_files):
             print(tmp_query.fly_speed)
             db_session.commit()
             set_path_coords(db_session, path, query_id)
-
-            save_img(params['fly_height'], path)
+            print("PATH:", path)
+            # save_img(params['fly_height'], path)
         else:
             tmp_query = db_session.query(Query).filter_by(id=query_id).first()
             tmp_query.status = 1

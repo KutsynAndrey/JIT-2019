@@ -28,6 +28,10 @@ def main_page():
 
 @app.route('/new-polygon', methods=['POST', 'GET'])
 def add_task():
+    if not 'is_logged' in session:
+        return "Ви не ввійшли до системи"
+    elif not session['is_logged']:
+        return "Ви не ввійшли до системи"
     clear_errors(session)
     if request.method == 'POST':
         set_query(session, request.form, db_session, request.files)
@@ -55,6 +59,10 @@ def sign_in():
 
 @app.route('/profile/<nickname>', methods=['POST', 'GET'])
 def profile(nickname):
+    if not 'is_logged' in session:
+        return "Ви не ввійшли до системи"
+    elif not session['is_logged']:
+        return "Ви не ввійшли до системи"
     last_queries = get_queries(db_session, session)
     print("LAST", last_queries)
     return render_template('profile.html', session=session, queries=last_queries, length=len(last_queries))
@@ -62,12 +70,20 @@ def profile(nickname):
 
 @app.route('/logout')
 def logout():
+    if not 'is_logged' in session:
+        return "Ви не ввійшли до системи"
+    elif not session['is_logged']:
+        return "Ви не ввійшли до системи"
     session.clear()
     return redirect('/')
 
 
 @app.route('/task/<int:task_id>', methods=['POST', 'GET'])
 def task(task_id):
+    if not 'is_logged' in session:
+        return "Ви не ввійшли до системи"
+    elif not session['is_logged']:
+        return "Ви не ввійшли до системи"
     obj = get_query(db_session, session, task_id)
     x, y = get_polygon_coords(db_session, obj.id)
     path_coords = get_path_coords(db_session, task_id, True)
@@ -76,6 +92,10 @@ def task(task_id):
 
 @app.route('/img-processing', methods=['POST', 'GET'])
 def img_processing():
+    if not 'is_logged' in session:
+        return "Ви не ввійшли до системи"
+    elif not session['is_logged']:
+        return "Ви не ввійшли до системи"
     clear_errors(session)
     result = [0, 0]
     name = None
@@ -96,6 +116,10 @@ def img_processing():
 
 @app.route('/map-creator', methods=['POST', 'GET'])
 def map_creator():
+    if not 'is_logged' in session:
+        return "Ви не ввійшли до системи"
+    elif not session['is_logged']:
+        return "Ви не ввійшли до системи"
     clear_errors(session)
     if request.method == 'POST':
         images = request.files.getlist("input")
@@ -148,12 +172,20 @@ def map_creator():
 
 @app.route('/download-result/<name>', methods=['GET'])
 def img_download(name):
+    if not 'is_logged' in session:
+        return "Ви не ввійшли до системи"
+    elif not session['is_logged']:
+        return "Ви не ввійшли до системи"
     path = "static/tmp-photos/" + name + ".JPG"
     return send_file(path, as_attachment=True, attachment_filename=name + ".JPG", cache_timeout=0)
 
 
 @app.route('/watering', methods=['GET', 'POST'])
 def water_advices():
+    if not 'is_logged' in session:
+        return "Ви не ввійшли до системи"
+    elif not session['is_logged']:
+        return "Ви не ввійшли до системи"
     clear_errors(session)
     if request.method == 'POST':
 
@@ -181,6 +213,10 @@ def water_advices():
 
 @app.route("/moving-objects", methods=['GET', 'POST'])
 def moving_objects():
+    if not 'is_logged' in session:
+        return "Ви не ввійшли до системи"
+    elif not session['is_logged']:
+        return "Ви не ввійшли до системи"
     clear_errors(session)
     if request.method == 'POST':
         if request.files['input1'].content_type == "application/octet-stream":

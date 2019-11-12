@@ -64,7 +64,7 @@
             </div>
         </div>
         {% if session['watering-ready'] %}
-            <a href="/download-result/{{ session['watering-name'] }}">Завантажити результат</a>
+            <a id='download' href="/download-result/{{ session['watering-name'] }}">Завантажити результат</a>
         {% endif %}
         <form method="post" enctype="multipart/form-data"> 
             <div class="choose_file">
@@ -90,6 +90,10 @@
                 
                 $(".button-send").click(function(){
                     $(".sendbutton").trigger("click")
+                });
+
+                $(".button-download").click(function(){
+                    $(".download").trigger("click")
                 });
             });
     
