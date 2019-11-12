@@ -113,7 +113,7 @@ def valid_route(path, fly_loss, photo_loss, battery, fly_speed):
 		x2 = path[i][0]
 		y2 = path[i][1]
 		s += math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
-	print('S:', s, 'SPEED:', fly_speed)
+	# print('S:', s, 'SPEED:', fly_speed)
 	fly_time = (s / fly_speed) / 3600
 	E = fly_loss * ((len(path) - 2) / 3600 + fly_time) + photo_loss * (len(path) - 2)
 
@@ -183,7 +183,7 @@ def get_segments(polygon, size):
 
 def get_coords(segments, size, y_coords, y_coords_vertex):
 	coords_photo = MyTransformedDict()
-	print("Y_MAX:", y_coords[-1])
+	# print("Y_MAX:", y_coords[-1])
 	for j in range(1, len(y_coords)):
 		cur_y = y_coords[j] - size[1] / 2.
 		segment = []
@@ -243,14 +243,14 @@ def algorithm(polygon_input = [], size = [], start = [], fly_speed = 1, fly_loss
 	# start = polygon_input[0][0]
 	# size = [2, 1]
 
-	print('START..................................')
+	# print('START..................................')
 	result = []
 	# convert polygon to comfortable use
-	print("POLYGON_BEFORE:", polygon_input)
+	# print("POLYGON_BEFORE:", polygon_input)
 	polygon_input = convert_polygon(polygon_input, 0)
-	print("POLYGON_AFTER:", polygon_input)
-	print("START_POINT:", start)
-	print('SIZE:', size)
+	# print("POLYGON_AFTER:", polygon_input)
+	# print("START_POINT:", start)
+	# print('SIZE:', size)
 	radian = 0
 	result.append(cycle(polygon_input, size, radian))
 	# for i in range(1):
@@ -265,7 +265,7 @@ def algorithm(polygon_input = [], size = [], start = [], fly_speed = 1, fly_loss
 	result.sort(key = lambda x: x[0])
 
 	l, radian, path = result[0][0], result[0][1], result[0][2]
-	print('PATH_BEFORE:', path)
+	# print('PATH_BEFORE:', path)
 	for i in range(len(path)):
 		path[i] = turn_dot(path[i], -radian)
 
@@ -275,8 +275,8 @@ def algorithm(polygon_input = [], size = [], start = [], fly_speed = 1, fly_loss
 	valid, spent_battery, fly_time, length_route = valid_route(path, fly_loss, photo_loss, battery, fly_speed)
 
 	if valid:
-		print('RADIAN:', radian, "LEN:", len(path))
-		print('PATH_AFTER:', path)
+		# print('RADIAN:', radian, "LEN:", len(path))
+		# print('PATH_AFTER:', path)
 
 		return [1, path, radian, spent_battery, fly_time, length_route]
 	return [0, [], 0, spent_battery, fly_time, length_route]
